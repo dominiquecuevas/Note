@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<p>{{ q }}</p><br>
+
+<ul>
+{% for annotation in q %}
+    <li>User ID: {{ annotation.user_id }}</li>
+    <li>Song Fragment: {{ annotation.song_fragment }}</li>
+    <li>Annotation: {{ annotation.annotation }}</li>
+    <li>YouTube: <a href={{ annotation.song.video_url }}>video</a></li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
