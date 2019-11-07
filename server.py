@@ -1,37 +1,46 @@
 from flask import Flask, render_template, request, flash, redirect, session
+import requests
 from jinja2 import StrictUndefined
+from model import connect_db, db, Song, User, Annotation, seed_data
 
-
-from model import connect_db, Song
 
 app = Flask(__name__)
-# app.secret_key = 'sekrit'
+app.secret_key = 'sekrit'
 
 app.jinja_env.undefined = StrictUndefined
 
-@app.route("/")
-def homepage():
+@app.route("/test-query")
+def test_query():
+    """test queries"""
 
-    return render_template("index.html")
+    q = db.session.query(Annotation).filter(Annotation.user_id==1).all()
+
+    return render_template("test-query.html",
+                            q=q)
+
+# @app.route("/search")
+# def search_api():
 
 
-@app.route("/anno-form")
-def annoform():
+#     return
 
-    annotation = request.args.get("annotation")
-    return render_template("anno_input.html")
+# @app.route("/anno-form")
+# def annoform():
+
+#     annotation = request.args.get("annotation")
+#     return render_template("anno_input.html")
 
 
-@app.route("/add-anno", methods=["POST"])
-def addanno():
+# @app.route("/add-anno", methods=["POST"])
+# def addanno():
 
-    annotation = request.form.get("annotation")
+#     annotation = request.form.get("annotation")
 
-    return render_template("user_annotations.html",
-                            annotation = annotation)
+#     return render_template("user_annotations.html",
+#                             annotation = annotation)
 
 
 if __name__ == "__main__":
     connect_db(app)
-    db.create_all()
+    
     app.run(host="0.0.0.0", debug=True)
