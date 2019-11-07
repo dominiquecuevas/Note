@@ -11,7 +11,8 @@ class Song(db.Model):
     song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_title = db.Column(db.String(120), nullable=False)
     song_artist = db.Column(db.String(120), nullable=False)
-    lyrics = db.Column(db.String(10000), nullable=False)
+    lyrics = db.Column(db.Text, nullable=False)
+    video_url = db.Column(db.Text)
 
     def __repr__(self):
 
@@ -31,33 +32,16 @@ class User(db.Model):
 
          return f"<User id={self.user_id} email={self.email}>"
 
-
-class Video(db.Model):
-    """Youtube videos"""
-
-    __tablename__ = "videos"
-
-    video_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    url = db.Column(db.String, nullable=False)
-    song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), unique=True)
-
-    song = db.relationship("Song",
-                            backref="videos")
-
-    def __repr__(self):
-
-        return f"<Video id={self.video_id} url='{self.url}'>"
-
 class Annotation(db.Model):
     """User-made annotations."""
 
     __tablename__ = "annotations"
 
     anno_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    annotation = db.Column(db.String(10000), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
+    annotation = db.Column(db.Text, nullable=False)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
-    song_fragment = db.Column(db.String(10000), nullable=False)
+    song_fragment = db.Column(db.Text, nullable=False)
 
     user = db.relationship("User",
                             backref="annotations")
@@ -73,11 +57,58 @@ class Annotation(db.Model):
 def connect_db(app):
     """Configure and connect to psql after createdb database."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///database'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///lyrics'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_ECHO'] = False
     db.app = app
     db.init_app(app)
+
+
+def seed_data():
+    q = db.session.query
+
+    # test creating rows with static data
+    panini = Song(song_title='Panini', song_artist='Lil Nas X', lyrics='Hey, Panini..', video_url='https://www.youtube.com/watch?v=bXcSLI58-h8')
+    sd = Song(song_title='Slow Dancing in the Dark', song_artist='Joji', lyrics="I don't want a friend..", video_url='https://www.youtube.com/watch?v=K3Qzzggn--s')
+    db.session.add(panini)
+    db.session.add(sd)
+    db.session.commit()
+    # test query on song
+    q_song = Song.query.filter(Song.song_artist.like('%Lil%')).all()
+    print(f'This song works: {q_song}')
+
+
+    nikki = User(email='nikki@gmail.com', name='Nikki')
+    dominique = User(email='dominique@gmail.com', name='Dominique')
+    db.session.add(nikki)
+    db.session.add(dominique)
+    db.session.commit()
+    # test query
+    q_user = q(User).filter(User.email.like('%@gmail.com%')).all()
+    print(f'These users work: {q_user}')
+
+
+    panini_anno = Annotation(song_fragment="Hey, Panini don't you be a meanie",
+                            annotation="Panini is a character from Chowder cartoon",
+                            song=panini)
+    
+    nikki.annotations.append(panini_anno)
+    db.session.add(panini_anno)
+    db.session.commit()
+    print(f"This append annotation to User {nikki.name} works: {nikki.annotations}")
+
+
+    sd_anno = Annotation(song_fragment="When I'm around slow dancing in the dark",
+                            annotation="Something, something annotation",
+                            song=sd)
+    dominique.annotations.append(sd_anno)
+    db.session.commit()
+    print(f"This append to User {dominique.email} works: {dominique.annotations}")
+
+
+    s_annos = panini.annotations
+    print(f"This annotations to song {panini} works: {s_annos}")
+
 
 if __name__ == "__main__":
 
@@ -85,44 +116,5 @@ if __name__ == "__main__":
 
     connect_db(app)
     db.create_all()
-
-    q = db.session.query
-
-    # test creating rows with static data
-    panini = Song(song_title='Panini', song_artist='Lil Nas X', lyrics='Hey, Panini..')
-    sd = Song(song_title='Slow Dancing in the Dark', song_artist='Joji', lyrics='I don\'t want a friend..')
-    db.session.add(panini)
-    db.session.add(sd)
-    # test query on song
-    q_song = Song.query.filter(Song.song_artist.like('%Lil%')).all()
-
-    nikki = User(email='nikki@gmail.com', name='Nikki')
-    dominique = User(email='dominique@gmail.com', name='Dominique')
-    db.session.add(nikki)
-    db.session.add(dominique)
-    # test query on user
-    q_user = User.query.get(1)
-    # test object
-    o_user = nikki.email
-
-    panini_vid = Video(url='https://www.youtube.com/watch?v=bXcSLI58-h8', song_id=1)
-    db.session.add(panini_vid)
-    # in terminal, test relationship btwn video and song
-    # panini_vid.song.lyrics
-    # test query
-
-    panini_anno = Annotation(song_fragment='Hey, Panini don\'t you be a meanie',
-                            annotation='Panini is a character from Chowder cartoon',
-                            song_id=1, user_id=2)
-    sd_anno = Annotation(song_fragment='When I\'m around slow dancing in the dark',
-                            annotation='Something, something annotation',
-                            song_id=2, user_id=1)
-    db.session.add(panini_anno)
-    db.session.add(sd_anno)
-    # test relationship - Annotations has relationship with Song that has relationship with Video
-    q_anno_video = q(Annotation.annotation, Video.url).outerjoin(Song).outerjoin(Video).all()
-    panini_anno.song.videos
-    db.session.commit()
-
 
     print("Connected to database")
