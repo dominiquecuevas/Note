@@ -6,8 +6,14 @@
 <body>
 
     <h1>Results</h1>
-    <h2 id="title">{{ title }}</h2>
-    <div id="lyics">{{ lyrics }}</div>
+    <h2 id="title">{{ song_title }}</h2>
+    <h3 id="artist">{{ artist }}</h3>
+    <div id="lyrics">
+        <!-- jinja block to pass through html code -->
+        {% autoescape false %}
+        {{ lyrics_html }}
+        {% endautoescape %}
+    </div>
 
 </body>
 </html>
