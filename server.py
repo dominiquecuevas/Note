@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, flash, redirect, session
 import requests
 from jinja2 import StrictUndefined
 from model import connect_db, db, Song, User, Annotation, seed_data
-import requests
+
 # Scraper no scraping
 from bs4 import BeautifulSoup
+import requests
 # to access api key
 import os
 
@@ -37,7 +38,8 @@ def api_scrape():
     # print(response.content)
     data = response.json()
 
-    title = data['response']['hits'][0]['result']['full_title']
+    song_title = data['response']['hits'][0]['result']['title']
+    artist = data['response']['hits'][0]['result']['primary_artist']['name']
     lyrics_url = data['response']['hits'][0]['result']['url']
 
     # web scraping
@@ -49,9 +51,65 @@ def api_scrape():
     # lyrics as string with \n
     lyrics_str = lyrics.get_text()
     # replaced python's \n to html <br>, still in quotes
-    # lyrics_html = lyrics_str.replace('\n','<br>')
+    lyrics_html = lyrics_str.replace('\n','<br>')
 
-    return render_template("results.html", title=title, lyrics=lyrics_str)
+    return render_template("results.html", 
+                            song_title=song_title,
+                            artist=artist,
+                            lyrics_html=lyrics_html)
+
+@app.route("/user-reg")
+def user():
+
+    return render_template("/user.html")
+
+@app.route("/user", methods=['POST'])
+def user_session():
+
+    name = request.form["name"]
+    email = request.form["email"]
+
+    new_user = User(email=email, name=name)
+    db.session.add(new_user)
+    db.session.commit()
+
+    # made session the user_id since the User object by itself cannot be sessioned
+    session['current_user'] = new_user.user_id
+    print(session['current_user'])
+
+    return redirect("/")
+
+
+@app.route("/save", methods=['POST'])
+def save():
+    """Testing get user input and save to database"""
+
+    annotation = request.form["annotation"]
+    fragment = request.form["fragment"]
+
+    # hard code values right now
+    user_id = 1
+    song_id = 2
+
+    new_annotation = Annotation(annotation=annotation, 
+                                song_fragment=fragment,
+                                song_id=song_id)
+
+    q = User.query.get(session['current_user'])
+    q.annotations.append(new_annotation)
+    db.session.add(new_annotation)
+    db.session.commit()
+
+    annotations = User.query.get(session['current_user']).annotations
+
+    return render_template("user_annotations.html",
+                            annotations=annotations)
+
+
+@app.route("/user-annos")
+def user_annos():
+
+    return render_template("user_annotations.html")
 
 
 @app.route("/test-query")
@@ -62,29 +120,6 @@ def test_query():
 
     return render_template("test-query.html",
                             q=q)
-
-@app.route("/test-input", methods=['POST'])
-def test_input():
-    """Testing get user input and save to database"""
-
-    annotation = request.form["annotation"]
-    fragment = request.form["fragment"]
-
-    # hard code values right now
-    user_id = 1
-    song_id = 2
-
-    new_annotation = Annotation(annotation=annotation, song_fragment=fragment, 
-                            user_id=user_id,
-                            song_id=song_id)
-
-    db.session.add(new_annotation)
-    db.session.commit()
-
-    # flash message did not work
-    flash(f"Annotation {annotation} added.")
-
-    return redirect("/test-query")
 
 # @app.route("/anno-form")
 # def annoform():
