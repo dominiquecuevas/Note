@@ -22,6 +22,10 @@ GENIUS_URL = "https://api.genius.com/"
 
 @app.route("/")
 def homepage():
+
+    if not session.get('current_user'):
+        return redirect("/user-reg")
+
     return render_template("index.html")
 
 @app.route("/results")
