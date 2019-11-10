@@ -9,8 +9,8 @@ class Song(db.Model):
     __tablename__ = "songs"
 
     song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    song_title = db.Column(db.String(120), nullable=False)
-    song_artist = db.Column(db.String(120), nullable=False)
+    song_title = db.Column(db.Text, nullable=False)
+    song_artist = db.Column(db.Text, nullable=False)
     lyrics = db.Column(db.Text, nullable=False)
     video_url = db.Column(db.Text)
 
