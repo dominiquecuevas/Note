@@ -5,7 +5,11 @@
 </head>
 <body>
 
-    <p>{{ annotation }}
+    <p>
+        <!-- test if current_user in session passed through for annotations -->
+        {% for annotation in annotations %}
+            {{ annotation.annotation }}<br>
+        {% endfor %}
     </p>
 
 </body>
