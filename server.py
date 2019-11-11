@@ -129,16 +129,16 @@ def save():
     db.session.add(new_annotation)
     db.session.commit()
 
-    annotations = User.query.get(session['current_user']).annotations
-
-    return render_template("user_annotations.html",
-                            annotations=annotations)
+    return redirect("/user-annos")
 
 
 @app.route("/user-annos")
 def user_annos():
 
-    return render_template("user_annotations.html")
+    annotations = User.query.get(session['current_user']).annotations
+
+    return render_template("user_annotations.html",
+                            annotations=annotations)
 
 
 @app.route("/test-query")
