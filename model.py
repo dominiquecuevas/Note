@@ -40,7 +40,7 @@ class Annotation(db.Model):
     anno_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     annotation = db.Column(db.Text, nullable=False)
-    song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=False)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'), nullable=True)
     song_fragment = db.Column(db.Text, nullable=False)
 
     user = db.relationship("User",
