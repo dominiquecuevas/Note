@@ -31,7 +31,7 @@ def homepage():
 @app.route("/results")
 def api_scrape():
 
-    search = request.args.get('api')
+    search = request.args.get('api') # api is from form input
 
     payload = {'access_token' : GENIUS_TOKEN,
                 'q': search}
@@ -42,9 +42,21 @@ def api_scrape():
     # print(response.content)
     data = response.json()
 
+    # go to search api > songs api > youtube video
     song_title = data['response']['hits'][0]['result']['title']
     artist = data['response']['hits'][0]['result']['primary_artist']['name']
     lyrics_url = data['response']['hits'][0]['result']['url']
+    session['song_title'] = song_title
+    session['song_artist'] = artist
+
+    api_song = data['response']['hits'][0]['result']['api_path']
+
+    payload_song = {'access_token : GENIUS_TOKEN'}
+    url_song = GENIUS_URL + api_song.lstrip('/')
+    response_song = requests.get(url_song, params=payload)
+    data_song = response_song.json()
+    video_url = data_song['response']['song']['media'][0]['url']
+    session['video_url'] = video_url
 
     # web scraping
     page = requests.get(lyrics_url)
@@ -56,6 +68,7 @@ def api_scrape():
     lyrics_str = lyrics.get_text()
     # replaced python's \n to html <br>, still in quotes
     lyrics_html = lyrics_str.replace('\n','<br>')
+    session['lyrics'] = lyrics_html
 
     return render_template("results.html", 
                             song_title=song_title,
@@ -91,16 +104,28 @@ def save():
     annotation = request.form["annotation"]
     fragment = request.form["fragment"]
 
-    # hard code values right now
-    user_id = 1
-    song_id = 2
-
     new_annotation = Annotation(annotation=annotation, 
-                                song_fragment=fragment,
-                                song_id=song_id)
+                                song_fragment=fragment)
+
+    # need to query song from db to not duplicate
+    q_song = Song.query.filter(Song.song_title==session['song_title'],
+                                Song.song_artist==session['song_artist']).first()
+    print(q_song)
+    if q_song:
+        new_song = q_song
+        print('song in database')
+    else:
+        print('song not in db')
+        new_song = Song(song_title=session['song_title'],
+                        song_artist=session['song_artist'],
+                        lyrics=session['lyrics'],
+                        video_url=session['video_url'])
 
     q = User.query.get(session['current_user'])
     q.annotations.append(new_annotation)
+    new_song.annotations.append(new_annotation)
+
+    db.session.add(new_song)
     db.session.add(new_annotation)
     db.session.commit()
 
@@ -143,5 +168,6 @@ def test_query():
 
 if __name__ == "__main__":
     connect_db(app)
+    db.create_all()
     
     app.run(host="0.0.0.0", debug=True)
