@@ -31,7 +31,7 @@ def homepage():
 @app.route("/results")
 def api_scrape():
 
-    search = request.args.get('api') # api is from form input
+    search = request.args.get('q') # 'q' from index.html form input
 
     payload = {'access_token' : GENIUS_TOKEN,
                 'q': search}
@@ -55,9 +55,11 @@ def api_scrape():
     url_song = GENIUS_URL + api_song.lstrip('/')
     response_song = requests.get(url_song, params=payload)
     data_song = response_song.json()
+
     video_url = data_song['response']['song']['media'][0]['url']
     session['video_url'] = video_url
-
+    video_id = session['video_url'].replace("http://www.youtube.com/watch?v=","")
+    print(video_id)
     # web scraping
     page = requests.get(lyrics_url)
     # make Beautiful Soup elements from DOM
@@ -73,7 +75,8 @@ def api_scrape():
     return render_template("results.html", 
                             song_title=song_title,
                             artist=artist,
-                            lyrics_html=lyrics_html)
+                            lyrics_html=lyrics_html,
+                            video_id=video_id)
 
 @app.route("/user-reg")
 def user():
@@ -96,7 +99,6 @@ def user_session():
 
     return redirect("/")
 
-
 @app.route("/save", methods=['POST'])
 def save():
     """Testing get user input and save to database"""
@@ -113,9 +115,7 @@ def save():
     print(q_song)
     if q_song:
         new_song = q_song
-        print('song in database')
     else:
-        print('song not in db')
         new_song = Song(song_title=session['song_title'],
                         song_artist=session['song_artist'],
                         lyrics=session['lyrics'],
@@ -131,7 +131,6 @@ def save():
 
     return redirect("/user-annos")
 
-
 @app.route("/user-annos")
 def user_annos():
 
@@ -140,30 +139,9 @@ def user_annos():
     return render_template("user_annotations.html",
                             annotations=annotations)
 
-
-@app.route("/test-query")
-def test_query():
-    """test queries"""
-
-    q = db.session.query(Annotation).filter(Annotation.user_id==1).all()
-
-    return render_template("test-query.html",
-                            q=q)
-
-# @app.route("/anno-form")
-# def annoform():
-
-#     annotation = request.args.get("annotation")
-#     return render_template("anno_input.html")
-
-
-# @app.route("/add-anno", methods=["POST"])
-# def addanno():
-
-#     annotation = request.form.get("annotation")
-
-#     return render_template("user_annotations.html",
-#                             annotation = annotation)
+@app.route("/jqueryselect")
+def jqueryselect():
+    return render_template("jqueryselection.html")
 
 
 if __name__ == "__main__":
