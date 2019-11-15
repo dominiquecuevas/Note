@@ -95,28 +95,52 @@
     }
 
 </style>
+
+<!-- Load jQuery -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<!-- Load jQuery.selection plugin-->
+<script type="text/javascript" src="static/jquery.selection.js"></script>
+
 </head>
 <body>
 
     <h1>Results</h1>
     <h2 id="title">{{ song_title }}</h2>
     <h3 id="artist">{{ artist }}</h3>
-    <div id="lyrics">
+    <p id="lyrics">
         <!-- jinja block to pass through html code -->
         {% autoescape false %}
         {{ lyrics_html }}
         {% endautoescape %}
-    </div>
+    </p>
 
     <div>
-
     <form action="/save" method="POST">
-    Fragment <input type='text' name='fragment'><br>
-    Annotation <input type='text' name='annotation'><br>
+    Fragment <textarea id="fragment" name='fragment'></textarea><br>
+    Annotation <textarea name='annotation'></textarea><br>
     <input type='submit' value='Save'>
     </form>
-
     </div>
+
+    <p>
+    <!-- while text selected, click button to  -->
+    <input type="button" id="sel-text" value="Get selected text" />
+    </p>
+
+    <script>
+
+    // const fragment = $('fragment').attr('value')
+    // Get selected text
+    // when sel-text button is clicked, put the selected text in textarea
+
+    $('#sel-text').on('click', function(){
+        $('#lyrics').focus();
+        $('#fragment').text($.selection());
+
+    });
+
+    </script>
 
     <div class="youtube-player" data-id="{{ video_id }}"></div>
 
