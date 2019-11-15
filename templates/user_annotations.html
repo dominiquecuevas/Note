@@ -5,11 +5,26 @@
 </head>
 <body>
 
+    <h1>User Annotations</h1>
+
     <p>
-        <!-- test if current_user in session passed through for annotations -->
+        <table border="1">
+            <tr>
+                <th>Song</th>
+                <th>Artist</th>
+                <th>Fragment</th>
+                <th>Annotation</th>
+            </tr>
         {% for annotation in annotations %}
-            {{ annotation.annotation }}<br>
+            <tr>
+                <td>{{ annotation.song.song_title }}</td>
+                <td>{{ annotation.song.song_artist }}</td>
+                <td>{{ annotation.song_fragment }}</td>
+                <td>{{ annotation.annotation }}</td>
+            </tr>
+
         {% endfor %}
+        </table>
     </p>
 
 </body>
