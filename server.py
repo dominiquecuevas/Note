@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 import requests
 from jinja2 import StrictUndefined
 from model import connect_db, db, Song, User, Annotation, seed_data
+import genius
 
 # Scraper no scraping
 from bs4 import BeautifulSoup
@@ -29,7 +30,7 @@ def homepage():
     return render_template("index.html")
 
 @app.route("/results")
-def api_scrape():
+def results():
 
     search = request.args.get('q') # 'q' from index.html form input
 
@@ -52,13 +53,19 @@ def api_scrape():
     api_song = data['response']['hits'][0]['result']['api_path']
 
     payload_song = {'access_token : GENIUS_TOKEN'}
-    url_song = GENIUS_URL + api_song.lstrip('/')
+    url_song = GENIUS_URL + api_song.lstrip('/') # get rid of second slash
     response_song = requests.get(url_song, params=payload)
     data_song = response_song.json()
 
-    video_url = data_song['response']['song']['media'][0]['url']
-    session['video_url'] = video_url
-    video_id = session['video_url'].replace("http://www.youtube.com/watch?v=","")
+    # video_url = data_song['response']['song']['media'][0]['url']
+    # session['video_url'] = video_url
+
+    media_list = data_song['response']['song']['media']
+    for idx, media in enumerate(media_list):
+        if media['provider']=="youtube":
+            session['video_url'] = media_list[idx]['url']
+            video_id = session['video_url'].replace("http://www.youtube.com/watch?v=","")
+
     print(video_id)
     # web scraping
     page = requests.get(lyrics_url)
@@ -77,6 +84,12 @@ def api_scrape():
                             artist=artist,
                             lyrics_html=lyrics_html,
                             video_id=video_id)
+
+@app.route("/api/search")
+def api_search():
+
+    search = request.args.get('q')
+    return jsonify(genius.search(search))
 
 @app.route("/user-reg")
 def user():
