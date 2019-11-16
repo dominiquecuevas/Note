@@ -5,7 +5,7 @@
 </head>
 <body>
 
-    <h1>User Annotations</h1>
+    <h1>Annotation made by {{ user.name }}'s</h1>
 
     <p>
         <table border="1">
@@ -17,7 +17,7 @@
             </tr>
         {% for annotation in annotations %}
             <tr>
-                <td>{{ annotation.song.song_title }}</td>
+                <td><a href="/song-annos">{{ annotation.song.song_title }}</a></td>
                 <td>{{ annotation.song.song_artist }}</td>
                 <td>{{ annotation.song_fragment }}</td>
                 <td>{{ annotation.annotation }}</td>
