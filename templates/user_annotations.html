@@ -17,7 +17,10 @@
             </tr>
         {% for annotation in annotations %}
             <tr>
-                <td><a href="/song-annos">{{ annotation.song.song_title }}</a></td>
+                <td><a href="/results?q=
+                    {{annotation.song.song_title }}
+                    {{ annotation.song.song_artist }}">
+                {{ annotation.song.song_title }}</a></td>
                 <td>{{ annotation.song.song_artist }}</td>
                 <td>{{ annotation.song_fragment }}</td>
                 <td>{{ annotation.annotation }}</td>
