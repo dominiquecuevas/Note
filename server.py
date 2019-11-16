@@ -147,9 +147,10 @@ def save():
 @app.route("/user-annos")
 def user_annos():
 
-    annotations = User.query.get(session['current_user']).annotations
-
+    user = User.query.get(session['current_user'])
+    annotations = user.annotations
     return render_template("user_annotations.html",
+                            user=user,
                             annotations=annotations)
 
 @app.route("/songs")
