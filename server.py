@@ -152,10 +152,19 @@ def user_annos():
     return render_template("user_annotations.html",
                             annotations=annotations)
 
-@app.route("/jqueryselect")
-def jqueryselect():
-    return render_template("jqueryselection.html")
+@app.route("/songs")
+def songs():
 
+    songs = Song.query.all()
+    return render_template("songs.html",
+                            songs = songs)
+
+@app.route("/songs/<int:song_id>")
+def song(song_id):
+
+    song = Song.query.get(song_id)
+    return render_template("song.html",
+                            song=song)
 
 if __name__ == "__main__":
     connect_db(app)
