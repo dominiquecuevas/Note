@@ -115,6 +115,11 @@
         {% endautoescape %}
     </p>
 
+    <p>
+    <!-- while text selected, click button to  -->
+    <input type="button" id="get-fragment" value="Get song fragment" />
+    </p>
+
     <div>
     <form action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
@@ -123,18 +128,15 @@
     </form>
     </div>
 
-    <p>
-    <!-- while text selected, click button to  -->
-    <input type="button" id="sel-text" value="Get selected text" />
-    </p>
+
 
     <script>
 
     // const fragment = $('fragment').attr('value')
     // Get selected text
-    // when sel-text button is clicked, put the selected text in textarea
+    // when get-fragment button is clicked, put the selected text in textarea
 
-    $('#sel-text').on('click', function(){
+    $('#get-fragment').on('click', function(){
         $('#lyrics').focus();
         $('#fragment').text($.selection());
 
