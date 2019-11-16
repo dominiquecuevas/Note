@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+    <h1>Songs</h1>
+
+    <p>
+        <table border="1">
+            <tr>
+                <th>Song</th>
+                <th>Artist</th>
+                <th>Annotations</th>
+
+            </tr>
+        {% for song in songs %}
+            <tr>
+                <td><a href="/results?q={{ song.song_title }} 
+                                        {{ song.song_artist }}">
+                                        {{ song.song_title }}</a>
+                </td>
+                <td>{{ song.song_artist }}</td>
+                <td><a href="/songs/{{ song.song_id }}">{{ song.annotations | length }}</a>
+                </td>
+            </tr>
+
+        {% endfor %}
+        </table>
+    </p>
+
+</body>
+</html>
