@@ -66,7 +66,6 @@ def results():
             session['video_url'] = media_list[idx]['url']
             video_id = session['video_url'].replace("http://www.youtube.com/watch?v=","")
 
-    print(video_id)
     # web scraping
     page = requests.get(lyrics_url)
     # make Beautiful Soup elements from DOM
