@@ -128,6 +128,8 @@
     </form>
     </div>
 
+    <div id="testjquery">hi</div>
+
 
 
     <script>
@@ -141,6 +143,24 @@
         $('#fragment').text($.selection());
 
     });
+
+    </script>
+
+        <form id="searchForm">
+                <input id="searchTerm" type="text"><br>
+                <input id="search" type="submit" value="Search">
+        </form>
+
+    <script>
+        $('#search').on('click', (evt) => {
+            evt.preventDefault();
+            // $('#lyrics').html('bye<br>bye<br>');
+
+            const q = $('#searchTerm').val();
+            $.get(`/api/search?q=${q}`, (res) => {
+                $('#lyrics').html(res.lyrics);
+            });
+        });
 
     </script>
 
