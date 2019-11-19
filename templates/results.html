@@ -3,99 +3,6 @@
 <head>
     <title></title>
 
-    <script>
-
-    /* Light YouTube Embeds by @labnol */
-    /* Web: http://labnol.org/?p=27941 */
-
-    document.addEventListener("DOMContentLoaded",
-        function() {
-            var div, n,
-                v = document.getElementsByClassName("youtube-player");
-            for (n = 0; n < v.length; n++) {
-                div = document.createElement("div");
-                div.setAttribute("data-id", v[n].dataset.id);
-                div.innerHTML = labnolThumb(v[n].dataset.id);
-                div.onclick = labnolIframe;
-                v[n].appendChild(div);
-            }
-        });
-
-    function labnolThumb(id) {
-        var thumb = '<img src="https://i.ytimg.com/vi/ID/hqdefault.jpg">',
-            play = '<div class="play"></div>';
-        return thumb.replace("ID", id) + play;
-    }
-
-    function labnolIframe() {
-        var iframe = document.createElement("iframe");
-        var embed = "https://www.youtube.com/embed/ID?autoplay=1";
-        iframe.setAttribute("src", embed.replace("ID", this.dataset.id));
-        iframe.setAttribute("frameborder", "0");
-        iframe.setAttribute("allowfullscreen", "1");
-        this.parentNode.replaceChild(iframe, this);
-    }
-
-</script>
-
-<style>
-    .youtube-player {
-        position: relative;
-        padding-bottom: 56.23%;
-        /* Use 75% for 4:3 videos */
-        height: 0;
-        overflow: hidden;
-        max-width: 100%;
-        background: #000;
-        margin: 5px;
-    }
-    
-    .youtube-player iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 100;
-        background: transparent;
-    }
-    
-    .youtube-player img {
-        bottom: 0;
-        display: block;
-        left: 0;
-        margin: auto;
-        max-width: 100%;
-        width: 100%;
-        position: absolute;
-        right: 0;
-        top: 0;
-        border: none;
-        height: auto;
-        cursor: pointer;
-        -webkit-transition: .4s all;
-        -moz-transition: .4s all;
-        transition: .4s all;
-    }
-    
-    .youtube-player img:hover {
-        -webkit-filter: brightness(75%);
-    }
-    
-    .youtube-player .play {
-        height: 72px;
-        width: 72px;
-        left: 50%;
-        top: 50%;
-        margin-left: -36px;
-        margin-top: -36px;
-        position: absolute;
-        background: url("//i.imgur.com/TxzC70f.png") no-repeat;
-        cursor: pointer;
-    }
-
-</style>
-
 <!-- Load jQuery -->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 
@@ -105,7 +12,17 @@
 </head>
 <body>
 
+    <form id="searchForm">
+        <input id="searchTerm" type="text"><br>
+        <input id="search" type="submit" value="Search">
+    </form>
+
     <h1>Results</h1>
+
+    <iframe id="ytplayer" type="text/html" width="640" height="360"
+    src="https://www.youtube.com/embed/{{ video_url }}?autoplay=1"
+    frameborder="0"></iframe>
+
     <h2 id="title">{{ song_title }}</h2>
     <h3 id="artist">{{ artist }}</h3>
     <p id="lyrics">
@@ -124,13 +41,13 @@
     <form action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
     Annotation <textarea name='annotation'></textarea><br>
+    <input type='hidden' name='song_title' value="{{ song_title }}">
+    <input type='hidden' name='song_artist' value="{{ artist }}">
+    <input type='hidden' name='lyrics' value="{{ lyrics_html }}">
+    <input type='hidden' name='video_url' value="{{ video_url }}">
     <input type='submit' value='Save'>
     </form>
     </div>
-
-    <div id="testjquery">hi</div>
-
-
 
     <script>
 
@@ -146,25 +63,32 @@
 
     </script>
 
-        <form id="searchForm">
-                <input id="searchTerm" type="text"><br>
-                <input id="search" type="submit" value="Search">
-        </form>
-
     <script>
-        $('#search').on('click', (evt) => {
-            evt.preventDefault();
-            // $('#lyrics').html('bye<br>bye<br>');
+    $('#search').on('click', (evt) => {
+        evt.preventDefault();
+        // $('#lyrics').html('bye<br>bye<br>');
 
-            const q = $('#searchTerm').val();
-            $.get(`/api/search?q=${q}`, (res) => {
-                $('#lyrics').html(res.lyrics);
-            });
+        
+
+        const q = $('#searchTerm').val();
+        $.get(`/api/search?q=${q}`, (res) => {
+            $('#lyrics').html(res.lyrics);
+            $('input[name="lyrics"]').val(res.lyrics);
+
+            // TODO: do that stuff up there ^^^^ but for everything else :D
+
+            $('#title').html(res.song_title);
+            $('input[name="song_title"]').val(res.song_title);
+
+            $('#artist').html(res.song_artist);
+            $('input[name="song_artist"]').val(res.song_artist);
+            
+            $('input[name="video_url"]').val(res.video_url);
+            $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
         });
+    });
 
     </script>
-
-    <div class="youtube-player" data-id="{{ video_id }}"></div>
 
 </body>
 </html>
