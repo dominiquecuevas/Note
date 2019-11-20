@@ -78,17 +78,36 @@ def results():
     lyrics_html = lyrics_str.replace('\n','<br>')
     session['lyrics'] = lyrics_html
 
+    # query any annotations for song searched
+    q_annotations = Annotation.query.filter(Song.song_title==session['song_title'],
+                                            Song.song_artist==session['song_artist']).join(Song).all()
+
     return render_template("results.html", 
                             song_title=song_title,
                             artist=artist,
                             lyrics_html=lyrics_html,
-                            video_url=video_url)
+                            video_url=video_url,
+                            q_annotations=q_annotations)
 
 @app.route("/api/search")
 def api_search():
 
     search = request.args.get('q')
-    return jsonify(genius.search(search))
+    # a dictionary of api data
+    search_dict = genius.search(search)
+
+    # query for annotations of searched songs already in database
+    q_annotations = db.session.query(Annotation.song_fragment, Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
+                                            Song.song_artist==search_dict['song_artist']).join(Song).all()
+    print(q_annotations)
+    # test
+    # q_annotations = [['list1', 'list1-2'], ['list2', 'list2-2']]
+
+    # add a key-value pair for the search list
+    search_dict['q_annotations'] = q_annotations
+
+    return jsonify(search_dict)
+
 
 @app.route("/user-reg")
 def user():
