@@ -1,45 +1,57 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 
-# User searches for song title and artist name using Genius.com API => /search?q=
-    # response[hits][0][url] for first result lyrics url
-# takes text 
+GENIUS_TOKEN = os.environ.get('TOKEN')
+GENIUS_URL = "https://api.genius.com/"
 
-# Some alternate lyric pages
-# page = requests.get('https://genius.com/Lil-nas-x-panini-lyrics')
-# page = requests.get('https://genius.com/Monica-angel-of-mine-lyrics')
-page = requests.get('https://genius.com/Queen-bohemian-rhapsody-lyrics')
-# page = requests.get('https://genius.com/Queen-killer-queen-lyrics')
+def search(q):
+    # search = request.args.get('q') # 'q' from index.html form input
 
-# make Beautiful Soup elements from DOM
-soup = BeautifulSoup(page.text, 'html.parser')
+    payload = {'access_token' : GENIUS_TOKEN,
+                'q': q}
+    url = GENIUS_URL + "search"
+    # print(url)
+    response = requests.get(url, params=payload)
 
-# from the webpage, get back the html element with the 'lyrics' class
-lyrics = soup.find(class_='lyrics')
+    # print(response.content)
+    data = response.json()
 
-# lyrics as string with \n
-lyrics_str = lyrics.get_text()
-# replaced python's \n to html <br>, still in quotes
-lyrics_html = lyrics_str.replace('\n','<br>')
+    # go to search api > songs api > youtube video
+    song_title = data['response']['hits'][0]['result']['title']
+    artist = data['response']['hits'][0]['result']['primary_artist']['name']
+    lyrics_url = data['response']['hits'][0]['result']['url']
+    # session['song_title'] = song_title
+    # session['song_artist'] = artist
 
-# replace the \n with </br> for html
+    api_song = data['response']['hits'][0]['result']['api_path']
 
-##########################################
+    payload_song = {'access_token : GENIUS_TOKEN'}
+    url_song = GENIUS_URL + api_song.lstrip('/') # get rid of second slash
+    response_song = requests.get(url_song, params=payload)
+    data_song = response_song.json()
 
-# # list of 'a' tags
-# a_tag_list = lyrics.find_all('a')
+    # video_url = data_song['response']['song']['media'][0]['url']
+    # session['video_url'] = video_url
 
-# # loop over list to remove tags
-# for a_tag in a_tag_list:
-#     # unwrap strips the a tag and leaves its contents
-#     a_tag.unwrap()
+    media_list = data_song['response']['song']['media']
+    for idx, media in enumerate(media_list):
+        if media['provider']=="youtube":
+            # session['video_url'] = media_list[idx]['url']
+            video_url = media_list[idx]['url'].replace("http://www.youtube.com/watch?v=","")
 
-# i_tag_list = lyrics.find_all('i')
+    # web scraping
+    page = requests.get(lyrics_url)
+    # make Beautiful Soup elements from DOM
+    soup = BeautifulSoup(page.text, 'html.parser')
+    # from the webpage, get back the html element with the 'lyrics' class
+    lyrics = soup.find(class_='lyrics')
+    # lyrics as string with \n
+    lyrics_str = lyrics.get_text()
+    # replaced python's \n to html <br>, still in quotes
+    lyrics_html = lyrics_str.replace('\n','<br>')
 
-# for i_tag in i_tag_list:
-#     i_tag.unwrap()
-
-# Not sure how to remove the div and <!--sse--><!--/sse-->
-
-# print(lyrics)
-# print(lyrics.prettify())
+    return {"song_title": song_title,
+            "song_artist": artist,
+            "lyrics": lyrics_html,
+            "video_url": video_url}
