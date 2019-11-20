@@ -51,7 +51,7 @@ class Annotation(db.Model):
 
     def __repr__(self):
 
-        return f"<Annotation id={self.anno_id} fragment='{self.song_fragment}' annotation='{self.annotation}'>"
+        return f"<Annotation id={self.anno_id} fragment='{self.song_fragment}' annotation='{self.annotation}' title='{self.song.song_title}'>"
 
 
 def connect_db(app):
