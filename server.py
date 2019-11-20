@@ -64,7 +64,7 @@ def results():
     for idx, media in enumerate(media_list):
         if media['provider']=="youtube":
             session['video_url'] = media_list[idx]['url']
-            video_id = session['video_url'].replace("http://www.youtube.com/watch?v=","")
+            video_url = session['video_url'].replace("http://www.youtube.com/watch?v=","")
 
     # web scraping
     page = requests.get(lyrics_url)
@@ -82,7 +82,7 @@ def results():
                             song_title=song_title,
                             artist=artist,
                             lyrics_html=lyrics_html,
-                            video_id=video_id)
+                            video_url=video_url)
 
 @app.route("/api/search")
 def api_search():
@@ -117,21 +117,25 @@ def save():
 
     annotation = request.form["annotation"]
     fragment = request.form["fragment"]
+    song_title = request.form["song_title"]
+    song_artist = request.form["song_artist"]
+    lyrics = request.form["lyrics"]
+    video_url = request.form["video_url"]
 
     new_annotation = Annotation(annotation=annotation, 
                                 song_fragment=fragment)
 
     # need to query song from db to not duplicate
-    q_song = Song.query.filter(Song.song_title==session['song_title'],
-                                Song.song_artist==session['song_artist']).first()
+    q_song = Song.query.filter(Song.song_title==song_title,
+                                Song.song_artist==song_artist).first()
     print(q_song)
     if q_song:
         new_song = q_song
     else:
-        new_song = Song(song_title=session['song_title'],
-                        song_artist=session['song_artist'],
-                        lyrics=session['lyrics'],
-                        video_url=session['video_url'])
+        new_song = Song(song_title=song_title,
+                        song_artist=song_artist,
+                        lyrics=lyrics,
+                        video_url=video_url)
 
     q = User.query.get(session['current_user'])
     q.annotations.append(new_annotation)
