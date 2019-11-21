@@ -49,8 +49,6 @@
     </form>
 
     <table id="q_annotations">
-        <th>Fragment</th>
-        <th>Annotation</th>
         <!-- append rows from query -->
     </table>
     </div>
@@ -74,7 +72,7 @@
         evt.preventDefault();
         // $('#lyrics').html('bye<br>bye<br>');
 
-        $('#q_annotations').append('<tr>test append to table</tr>');
+        // $('#q_annotations').append('<tr>test append to table</tr>');
 
         const q = $('#searchTerm').val();
         $.get(`/api/search?q=${q}`, (res) => {
@@ -92,13 +90,23 @@
             $('input[name="video_url"]').val(res.video_url);
             $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
 
+            // if there are annotations, not None
+            // clear out values
             // get q_annotations from json, is a list of tuples
-            // index into tuples, add a row 'tr'
-                // have a fragment 'td' and annotation 'td'
-            // for (const annotation of res.q_annotations)
-            $('#q_annotations').append(`<tr><td>${res.q_annotations}</td></tr>`);
-        });
+                // loop over list 
+                // index into tuples, add a row 'tr'
+                // td's for fragment and annotation in row
 
+            $('#q_annotations').empty();
+            if (res.song_annos.length) {
+                $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
+                for (const song_anno of res.song_annos) {
+                    $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
+                    $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
+                    $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
+                };
+            };
+        });
     });
 
     </script>
