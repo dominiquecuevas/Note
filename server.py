@@ -97,14 +97,19 @@ def api_search():
     search_dict = genius.search(search)
 
     # query for annotations of searched songs already in database
-    q_annotations = db.session.query(Annotation.song_fragment, Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
+    q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
                                             Song.song_artist==search_dict['song_artist']).join(Song).all()
     print(q_annotations)
     # test
     # q_annotations = [['list1', 'list1-2'], ['list2', 'list2-2']]
 
     # add a key-value pair for the search list
-    search_dict['q_annotations'] = q_annotations
+    song_annos = []
+    if q_annotations:
+        for annotation in q_annotations:
+            song_annos.append(annotation)
+
+    search_dict['song_annos'] = song_annos
 
     return jsonify(search_dict)
 
