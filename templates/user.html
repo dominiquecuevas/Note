@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}User Registration{% endblock %}
+
+{% block content %}
     <form action="/user" method="POST">
         Name <input type="text" name="name"><br>
         Email <input type="text" name="email"><br>
         <input type="submit">
     </form>
-
-</body>
-</html>
+{% endblock %}
