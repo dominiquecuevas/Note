@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Homepage</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}Home{% endblock %}
+
+{% block content %}
 <h1>Search</h1>
     <form action="/results" method="GET">
         <input type="text" name="q" placeholder="Song Title & Artist" required><br>
         <input type="submit" value="Search">
     </form>
-
-</body>
-</html>
+{% endblock %}

@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>Annotation made by {{ user.name }}'s</h1>
+{% block title %}Annotations{% endblock %}
+
+{% block content %}
+    <h1>{{ user.name }}'s Annotations</h1>
 
     <p>
         <table border="1">
@@ -30,5 +28,4 @@
         </table>
     </p>
 
-</body>
-</html>
+{% endblock %}

@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
+{% extends 'base.html' %}
 
+{% block title %}Lyrics{% endblock %}
+
+{% block script %}
 <!-- Load jQuery -->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-
 <!-- Load jQuery.selection plugin-->
 <script type="text/javascript" src="static/jquery.selection.js"></script>
+{% endblock %}
 
-</head>
-<body>
-
+{% block content %}
     <form id="searchForm">
         <input id="searchTerm" type="text"><br>
         <input id="search" type="submit" value="Search">
@@ -110,6 +108,4 @@
     });
 
     </script>
-
-</body>
-</html>
+{% endblock %}
