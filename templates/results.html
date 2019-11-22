@@ -17,16 +17,17 @@
 
     <h1>Results</h1>
 
-    <iframe id="ytplayer" type="text/html" width="640" height="360"
-    src="https://www.youtube.com/embed/{{ video_url }}?autoplay=1"
+    <iframe id="ytplayer" type="text/html" width="640" height="360" 
     frameborder="0"></iframe>
 
-    <h2 id="title">{{ song_title }}</h2>
-    <h3 id="artist">{{ artist }}</h3>
+<!-- DISABLING JINJA VARIABLES TO REFACTOR TO  -->
+    <h2 id="title"></h2>
+    <h3 id="artist"></h3>
     <p id="lyrics">
         <!-- jinja block to pass through html code -->
+
         {% autoescape false %}
-        {{ lyrics_html }}
+
         {% endautoescape %}
     </p>
 
@@ -39,10 +40,10 @@
     <form action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
     Annotation <textarea name='annotation'></textarea><br>
-    <input type='hidden' name='song_title' value="{{ song_title }}">
-    <input type='hidden' name='song_artist' value="{{ artist }}">
-    <input type='hidden' name='lyrics' value="{{ lyrics_html }}">
-    <input type='hidden' name='video_url' value="{{ video_url }}">
+    <input type='hidden' name='song_title' value="">
+    <input type='hidden' name='song_artist' value="">
+    <input type='hidden' name='lyrics' value="">
+    <input type='hidden' name='video_url' value="">
     <input type='submit' value='Save'>
     </form>
 
