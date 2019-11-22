@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block script %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <a href="/">LyricBuddy</a> | 
+        <a href="/user-annos">User-made Annotations</a>
+    </nav>
+    <br>
+    {% block content %}{% endblock %}
+</body>
+</html>
