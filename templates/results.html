@@ -11,14 +11,12 @@
 
 {% block content %}
     <form id="searchForm">
-        <input id="searchTerm" type="text"><br>
+        <input id="searchTerm" type="text" placeholder="Artist, Song"><br>
         <input id="search" type="submit" value="Search">
     </form>
 
-    <h1>Results</h1>
-
-    <iframe id="ytplayer" type="text/html" width="640" height="360" 
-    frameborder="0"></iframe>
+    <iframe id="ytplayer" type="text/html" width="0" height="0" frameborder="0">
+    </iframe>
 
 <!-- DISABLING JINJA VARIABLES TO REFACTOR TO  -->
     <h2 id="title"></h2>
@@ -33,11 +31,10 @@
 
     <p>
     <!-- while text selected, click button to  -->
-    <input type="button" id="get-fragment" value="Get song fragment" />
+    <input type="hidden" id="get-fragment" value="Copy song fragment" />
     </p>
 
-    <div id="annotation">
-    <form action="/save" method="POST">
+    <form style="display:none;" id="userinput" action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
     Annotation <textarea name='annotation'></textarea><br>
     <input type='hidden' name='song_title' value="">
@@ -50,63 +47,61 @@
     <table id="q_annotations">
         <!-- append rows from query -->
     </table>
-    </div>
 
-    <script>
+{% endblock %}
 
-    // const fragment = $('fragment').attr('value')
-    // Get selected text
-    // when get-fragment button is clicked, put the selected text in textarea
 
-    $('#get-fragment').on('click', function(){
-        $('#lyrics').focus();
-        $('#fragment').text($.selection());
+{% block jquery %}
+<script>
 
-    });
+// const fragment = $('fragment').attr('value')
+// Get selected text
+// when get-fragment button is clicked, put the selected text in textarea
 
-    </script>
+$('#get-fragment').on('click', function(){
+    $('#lyrics').focus();
+    $('#fragment').text($.selection());
 
-    <script>
-    $('#search').on('click', (evt) => {
-        evt.preventDefault();
-        // $('#lyrics').html('bye<br>bye<br>');
+});
 
-        // $('#q_annotations').append('<tr>test append to table</tr>');
+</script>
 
-        const q = $('#searchTerm').val();
-        $.get(`/api/search?q=${q}`, (res) => {
-            $('#lyrics').html(res.lyrics);
-            $('input[name="lyrics"]').val(res.lyrics);
+<script>
+$('#search').on('click', (evt) => {
+    evt.preventDefault();
 
-            // TODO: do that stuff up there ^^^^ but for everything else :D
+    const q = $('#searchTerm').val();
+    $.get(`/api/search?q=${q}`, (res) => {
+        $('#lyrics').html(res.lyrics);
+        $('input[name="lyrics"]').val(res.lyrics);
 
-            $('#title').html(res.song_title);
-            $('input[name="song_title"]').val(res.song_title);
+        // TODO: do that stuff up there ^^^^ but for everything else :D
 
-            $('#artist').html(res.song_artist);
-            $('input[name="song_artist"]').val(res.song_artist);
-            
-            $('input[name="video_url"]').val(res.video_url);
-            $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
+        $('#title').html(res.song_title);
+        $('input[name="song_title"]').val(res.song_title);
 
-            // if there are annotations, not None
-            // clear out values
-            // get q_annotations from json, is a list of tuples
-                // loop over list 
-                // index into tuples, add a row 'tr'
-                // td's for fragment and annotation in row
+        $('#artist').html(res.song_artist);
+        $('input[name="song_artist"]').val(res.song_artist);
+        
+        $('input[name="video_url"]').val(res.video_url);
+        // width="640" height="360" frameborder="0"
+        $('iframe').attr({'width':640, 'height':360});
+        $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
 
-            $('#q_annotations').empty();
-            if (res.song_annos.length) {
-                $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
-                for (const song_anno of res.song_annos) {
-                    $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
-                };
+        $('#q_annotations').empty();
+        if (res.song_annos.length) {
+            $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
+            for (const song_anno of res.song_annos) {
+                $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
+                $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
+                $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
             };
-        });
-    });
+        };
 
-    </script>
+        $('#userinput').attr('style','');
+        $('#get-fragment').attr('type','button');
+    });
+});
+
+</script>
 {% endblock %}
