@@ -3,13 +3,22 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     {% block script %}{% endblock %}
+
+    <ul>
+    {% for messages in get_flashed_messages() %}
+        <li>{{ messages }}</li>
+    {% endfor %}
+    </ul>
+
 </head>
 <body>
     <nav>
         <a href="/">LyricBuddy</a> | 
+        <a href="/songs">All Songs</a> |
         <a href="/user-annos">Account</a>
     </nav>
     <br>
     {% block content %}{% endblock %}
+    {% block jquery %}{% endblock %}
 </body>
 </html>
