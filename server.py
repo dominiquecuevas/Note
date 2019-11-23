@@ -173,11 +173,15 @@ def save():
 @app.route("/user-annos")
 def user_annos():
 
-    user = User.query.get(session['current_user'])
-    annotations = user.annotations
-    return render_template("user_annotations.html",
-                            user=user,
-                            annotations=annotations)
+    if session.get('current_user'):
+        user = User.query.get(session['current_user'])
+        annotations = user.annotations
+        return render_template("user_annotations.html",
+                                user=user,
+                                annotations=annotations)
+    else:
+        flash('Please sign-in')
+        return redirect('/user-reg')
 
 @app.route("/songs")
 def songs():
