@@ -1,34 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>Songs</h1>
+{% block title %}Annotated Songs{% endblock %}
 
-    <p>
-        <table border="1">
-            <tr>
-                <th>Song</th>
-                <th>Artist</th>
-                <th>Annotations</th>
+{% block content %}
+<table id="all-songs" border="1">
+    <tr>
+        <th>Song</th>
+        <th>Number of Annotations</th>
 
-            </tr>
-        {% for song in songs %}
-            <tr>
-                <td><a href="/results?q={{ song.song_title }} 
-                                        {{ song.song_artist }}">
-                                        {{ song.song_title }}</a>
-                </td>
-                <td>{{ song.song_artist }}</td>
-                <td><a href="/songs/{{ song.song_id }}">{{ song.annotations | length }}</a>
-                </td>
-            </tr>
+    </tr>
+{% for song in songs %}
+    <tr>
+        <td><a class="song-link" href="/">{{ song.song_title }} - {{ song.song_artist }}</a>
+        </td>
+        <td>{{ song.annotations | length }}
+        </td>
+    </tr>
 
-        {% endfor %}
-        </table>
-    </p>
+{% endfor %}
+</table>
 
-</body>
-</html>
+{% endblock content %}
