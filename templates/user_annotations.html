@@ -3,29 +3,26 @@
 {% block title %}Annotations{% endblock %}
 
 {% block content %}
+<div id="annos-by-user">
     <h1>{{ user.name }}'s Annotations</h1>
-
-    <p>
         <table border="1">
             <tr>
                 <th>Song</th>
-                <th>Artist</th>
                 <th>Fragment</th>
                 <th>Annotation</th>
             </tr>
         {% for annotation in annotations %}
             <tr>
-                <td><a href="/results?q=
-                    {{annotation.song.song_title }}
-                    {{ annotation.song.song_artist }}">
-                {{ annotation.song.song_title }}</a></td>
-                <td>{{ annotation.song.song_artist }}</td>
+                <td><a class="song-link" href="/">
+                    {{annotation.song.song_title }} - 
+                    {{ annotation.song.song_artist }}</a>
+                </td>
                 <td>{{ annotation.song_fragment }}</td>
                 <td>{{ annotation.annotation }}</td>
             </tr>
 
         {% endfor %}
         </table>
-    </p>
+</div>
 
 {% endblock %}
