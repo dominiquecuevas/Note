@@ -204,12 +204,12 @@ def songs():
     return render_template("songs.html",
                             songs = songs)
 
-@app.route("/songs/<int:song_id>")
-def song(song_id):
+# @app.route("/songs/<int:song_id>")
+# def song(song_id):
 
-    song = Song.query.get(song_id)
-    return render_template("song.html",
-                            song=song)
+#     song = Song.query.get(song_id)
+#     return render_template("song.html",
+#                             song=song)
 
 if __name__ == "__main__":
     connect_db(app)
