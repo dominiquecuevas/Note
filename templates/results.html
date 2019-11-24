@@ -4,37 +4,45 @@
 
 {% block script %}
 <!-- Load jQuery -->
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
 <!-- Load jQuery.selection plugin-->
-<script type="text/javascript" src="static/jquery.selection.js"></script>
-{% endblock %}
+<!-- <script type="text/javascript" src="static/jquery.selection.js"></script>
+ -->{% endblock %}
 
 {% block content %}
-    <form id="searchForm">
+
+<div id="song-suggestions">
+Song suggestions:
+<ul>
+    <li><a class="song-link" href="/joji-demons">Demons - Joji</a></li>
+    <li><a class="song-link" href="/khalid-talk">Talk - Khalid</a><br></li>
+    <li><a class="song-link" href="/lil-nas-x-panini">Panini - Lil Nas X</a></li>
+</ul>
+</div>
+    <!-- <form id="searchForm">
         <input id="searchTerm" type="text" placeholder="Artist, Song"><br>
         <input id="search" type="submit" value="Search">
-    </form>
+    </form> -->
 
-    <iframe id="ytplayer" type="text/html" width="0" height="0" frameborder="0">
-    </iframe>
+<!--     <iframe id="ytplayer" type="text/html" width="0" height="0" frameborder="0">
+    </iframe> -->
 
 <!-- DISABLING JINJA VARIABLES TO REFACTOR TO  -->
-    <h2 id="title"></h2>
+<!--     <h2 id="title"></h2>
     <h3 id="artist"></h3>
-    <p id="lyrics">
+    <p id="lyrics"> -->
         <!-- jinja block to pass through html code -->
 
-        {% autoescape false %}
+<!--         {% autoescape false %}
 
-        {% endautoescape %}
-    </p>
+        {% endautoescape %} -->
+    <!-- </p> -->
 
-    <p>
-    <!-- while text selected, click button to  -->
+<!--     <p>
     <input type="hidden" id="get-fragment" value="Copy song fragment" />
-    </p>
+    </p> -->
 
-    <form style="display:none;" id="userinput" action="/save" method="POST">
+<!--     <form style="display:none;" id="userinput" action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
     Annotation <textarea name='annotation'></textarea><br>
     <input type='hidden' name='song_title' value="">
@@ -45,14 +53,13 @@
     </form>
 
     <table id="q_annotations">
-        <!-- append rows from query -->
-    </table>
+    </table> -->
 
 {% endblock %}
 
 
 {% block jquery %}
-<script>
+<!-- <script>
 
 // const fragment = $('fragment').attr('value')
 // Get selected text
@@ -64,9 +71,50 @@ $('#get-fragment').on('click', function(){
 
 });
 
-</script>
+</script> -->
 
-<script>
+<!-- <script>
+
+
+// TODO: consolidate ajax code for clicking a song link and using the search bar 
+        // multiple selectors, 'clicked'
+$('.song-link').on('click', (evt) => {
+    const link = $(evt.target);
+    evt.preventDefault();
+
+    const q = link.html();
+    $.get(`/api/search?q=${q}`, (res) => {
+        $('#lyrics').html(res.lyrics);
+        $('input[name="lyrics"]').val(res.lyrics);
+
+        // TODO: do that stuff up there ^^^^ but for everything else :D
+
+        $('#title').html(res.song_title);
+        $('input[name="song_title"]').val(res.song_title);
+
+        $('#artist').html(res.song_artist);
+        $('input[name="song_artist"]').val(res.song_artist);
+        
+        $('input[name="video_url"]').val(res.video_url);
+        // width="640" height="360" frameborder="0"
+        $('iframe').attr({'width':640, 'height':360});
+        $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
+
+        $('#q_annotations').empty();
+        if (res.song_annos.length) {
+            $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
+            for (const song_anno of res.song_annos) {
+                $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
+                $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
+                $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
+            };
+        };
+
+        $('#userinput').attr('style','');
+        $('#get-fragment').attr('type','button');
+    });
+});
+
 $('#search').on('click', (evt) => {
     evt.preventDefault();
 
@@ -103,5 +151,5 @@ $('#search').on('click', (evt) => {
     });
 });
 
-</script>
+</script> -->
 {% endblock %}
