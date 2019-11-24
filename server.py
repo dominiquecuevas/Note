@@ -96,8 +96,9 @@ def api_search():
     search_dict = genius.search(search)
 
     # query for annotations of searched songs already in database
-    q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
-                                            Song.song_artist==search_dict['song_artist']).join(Song).all()
+    q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, 
+                                    Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
+                                    Song.song_artist==search_dict['song_artist']).join(Song).all()
     print(q_annotations)
     # test
     # q_annotations = [['list1', 'list1-2'], ['list2', 'list2-2']]
@@ -182,6 +183,19 @@ def user_annos():
     else:
         flash('Please sign-in')
         return redirect('/user-reg')
+
+# @app.route("/json/user-annos")
+# def user_annos():
+
+#     if session.get('current_user'):
+#         user = User.query.get(session['current_user'])
+#         annotations = user.annotations
+#         return render_template("user_annotations.html",
+#                                 user=user,
+#                                 annotations=annotations)
+#     else:
+#         flash('Please sign-in')
+#         return redirect('/user-reg')
 
 @app.route("/songs")
 def songs():
