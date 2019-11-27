@@ -7,7 +7,8 @@ class App extends React.Component {
             lyrics: "",
             video: "",
             songDataLoaded: false,
-            fragment: ""
+            fragment: "",
+            catData: { display: 'none' }
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,6 +18,7 @@ class App extends React.Component {
     handleSubmit(evt) {
         evt.preventDefault();
         const q = $(evt.target).serialize();
+        this.setState({catData: null });
 
         $.get(`/api/search?${q}`, (res) => {
             this.setState({
@@ -24,7 +26,8 @@ class App extends React.Component {
                 artist: res.song_artist,
                 lyrics: res.lyrics,
                 video: `https://www.youtube.com/embed/${res.video_url}?autoplay=0`,
-                songDataLoaded: true
+                songDataLoaded: true,
+                catData: { display: 'none' }
             });
         });
     }
@@ -49,6 +52,8 @@ class App extends React.Component {
                     <input type="text" name="q" placeholder="Artist, Song" />
                     <input type="submit" value="Search" />
                 </form>
+
+                <img style={this.state.catData} width="100" src="/static/img/loadnyan.gif" />
 
                 <div className="song-data" style={displayData}>
                     <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
