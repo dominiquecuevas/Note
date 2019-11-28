@@ -23,10 +23,15 @@ GENIUS_URL = "https://api.genius.com/"
 @app.route("/")
 def homepage():
 
-    if not session.get('current_user'):
-        return redirect("/user-reg")
+    # if not session.get('current_user'):
+    #     return redirect("/user-reg")
 
-    return render_template("results.html")
+    return render_template("react.html")
+
+@app.route("/react")
+def react():
+
+    return render_template("react.html")
 
 # @app.route("/results")
 # def results():
@@ -99,7 +104,7 @@ def api_search():
     q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, 
                                     Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
                                     Song.song_artist==search_dict['song_artist']).join(Song).all()
-    print(q_annotations)
+    # print(q_annotations)
     # test
     # q_annotations = [['list1', 'list1-2'], ['list2', 'list2-2']]
 
@@ -107,7 +112,10 @@ def api_search():
     song_annos = []
     if q_annotations:
         for annotation in q_annotations:
-            song_annos.append(annotation)
+            song_annos.append({'anno_id': annotation[0], 
+            'song_fragment': annotation[1],
+            'annotation': annotation[2]
+            })
 
     search_dict['song_annos'] = song_annos
 
