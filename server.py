@@ -121,6 +121,21 @@ def api_search():
 
     return jsonify(search_dict)
 
+@app.route("/json/allsongs")
+def songs():
+
+    allsongs = {'results': []}
+    songs = db.session.query(Song.song_title, Song.song_artist).all()
+    print(songs)
+    if songs:
+        for song_tuple in songs:
+            allsongs['results'].append({
+                                'song_title': song_tuple[0],
+                                'song_artist': song_tuple[1]
+                                })
+
+    return jsonify(allsongs)
+
 
 @app.route("/user-reg")
 def user():
@@ -205,12 +220,12 @@ def user_annos():
 #         flash('Please sign-in')
 #         return redirect('/user-reg')
 
-@app.route("/songs")
-def songs():
+# @app.route("/songs")
+# def songs():
 
-    songs = Song.query.all()
-    return render_template("songs.html",
-                            songs = songs)
+#     songs = Song.query.all()
+#     return render_template("songs.html",
+#                             songs = songs)
 
 # @app.route("/songs/<int:song_id>")
 # def song(song_id):
