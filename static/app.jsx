@@ -183,12 +183,6 @@ class App extends React.Component {
 
         return (
             <div>
-                <nav>
-                    <a href="/">LyricBuddy</a> | 
-                    <a onClick={this.handleSongs} href="#">All Songs</a> |
-                    <a href="/user-annos">Account</a>
-                </nav>
-                <br />
                 <form onSubmit={this.handleSubmit}>
                     <input type="text" name="q" placeholder="Artist, Song" />
                     <input type="submit" value="Search" />
