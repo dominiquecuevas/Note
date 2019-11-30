@@ -30,7 +30,7 @@
 // const SongList = (props) => {
 //     $.get('/json/allsongs', (res) => {
 //         const songItems = [];
-//         for (const result of res) {
+//         for (const result of res['results']) {
 //             // let song = 'Tierra Whack - Hungry Hippo';
 //             let song = `${result['song_artist']} - ${result['song_title']}`
 //             console.log(song);
