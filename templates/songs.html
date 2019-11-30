@@ -2,6 +2,14 @@
 
 {% block title %}Annotated Songs{% endblock %}
 
+{% block script %}
+    <script
+              src="https://code.jquery.com/jquery-3.4.1.js"
+              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+              crossorigin="anonymous"></script>
+    <script type="text/javascript" src="static/jquery.selection.js"></script>
+{% endblock %}
+
 {% block content %}
 <table id="all-songs" border="1">
     <tr>
@@ -9,15 +17,66 @@
         <th>Number of Annotations</th>
 
     </tr>
-{% for song in songs %}
+    {% for song in songs %}
     <tr>
-        <td><a class="song-link" href="/">{{ song.song_title }} - {{ song.song_artist }}</a>
+        <td><a class="song-link" href="/">{{ song.song_artist }} - {{ song.song_title }}</a>
         </td>
         <td>{{ song.annotations | length }}
         </td>
     </tr>
 
-{% endfor %}
+    {% endfor %}
 </table>
 
+<br>
+
+<span id="loadingcat" style="visibility: hidden;">
+&nbsp;<img id="catGif" height="16px" src="/static/img/nyancat.gif" />
+&nbsp;Loading...
+</span>
+
+<table id="q_annotations">
+</table>
+
+<h2 id="title"></h2>
+<h3 id="artist"></h3>
+<div id="lyrics"></div>
+
+<script>
+
+    $('.song-link').on('click', (evt) => {
+        $('#loadingcat').css("visibility","visible");
+        const link = $(evt.target);
+        evt.preventDefault();
+        const q = link.html();
+        $.get(`/api/search?q=${q}`, (res) => {
+            $('#lyrics').html(res.lyrics);
+            $('input[name="lyrics"]').val(res.lyrics);
+            // TODO: do that stuff up there ^^^^ but for everything else :D
+            $('#title').html(res.song_title);
+            $('input[name="song_title"]').val(res.song_title);
+            $('#artist').html(res.song_artist);
+            $('input[name="song_artist"]').val(res.song_artist);
+            
+            $('input[name="video_url"]').val(res.video_url);
+            // width="640" height="360" frameborder="0"
+            $('iframe').attr({'width':640, 'height':360});
+            $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
+            $('#q_annotations').empty();
+            if (res.song_annos.length) {
+                $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
+                for (const song_anno of res.song_annos) {
+                    $('#q_annotations').append(`<tr id="${song_anno['anno_id']}"></tr>`);
+                    $(`#${song_anno['anno_id']}`).append(`<td>${song_anno['song_fragment']}</td>`);
+                    $(`#${song_anno['anno_id']}`).append(`<td>${song_anno['annotation']}</td>`);
+                };
+            };
+            $('#userinput').attr('style','');
+            $('#get-fragment').attr('type','button');
+            $('#song-suggestions').empty();
+            $('#loadingcat').css("visibility","hidden");
+
+        });
+    });
+</script>
 {% endblock content %}
