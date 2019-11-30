@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}{% endblock %}</title>
+{% extends 'base.html' %}
+
+{% block script %}
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
@@ -21,10 +20,12 @@
             width: 640px; 
             overflow: auto;}
     </style>
+{% endblock %}
 
-</head>
-<body>
+{% block title %}LyricBuddy{% endblock %}
+
+{% block content %}
   <div id="root">
   </div>
   <script type="text/jsx" src="/static/app.jsx"></script>
-</body>
+{% endblock %}
