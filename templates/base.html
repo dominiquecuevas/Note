@@ -3,11 +3,11 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
 
-    <script
+<!--     <script
               src="https://code.jquery.com/jquery-3.4.1.js"
               integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
               crossorigin="anonymous"></script>
-    <script type="text/javascript" src="static/jquery.selection.js"></script>
+    <script type="text/javascript" src="static/jquery.selection.js"></script> -->
 
     {% block script %}{% endblock %}
 
@@ -19,24 +19,27 @@
 
 </head>
 <body>
-    <nav>
+<!--     <nav>
         <a href="/">LyricBuddy</a> | 
         <a href="/songs">All Songs</a> |
         <a href="/user-annos">Account</a> | 
-        <form id="searchForm">
-        <input id="searchTerm" type="text" placeholder="Artist, Song">
-        <input id="search" type="submit" value="Search">
-        </form>
+            <form id="searchForm">
+    <input id="searchTerm" type="text" placeholder="Artist, Song">
+    <input id="search" type="submit" value="Search">
+    </form>
     </nav>
-    <br>
+    <br> -->
+    {% block content %}{% endblock %}
+
+<!--     <br>
 
     <iframe id="ytplayer" type="text/html" width="0" height="0" frameborder="0">
-    </iframe>
+    </iframe> -->
 
 <!-- DISABLING JINJA VARIABLES TO REFACTOR TO  -->
-    <h2 id="title"></h2>
+<!--     <h2 id="title"></h2>
     <h3 id="artist"></h3>
-    <p id="lyrics">
+    <p id="lyrics"> -->
         <!-- jinja block to pass through html code -->
 <!--         <a class="song-link" href="/joji-demons">Demons - Joji</a><br>
         <a class="song-link" href="/khalid-talk">Talk - Khalid</a><br>
@@ -44,14 +47,14 @@
         {% autoescape false %}
 
         {% endautoescape %} -->
-    </p>
+    <!-- </p> -->
 
-    <p>
+    <!-- <p> -->
     <!-- while text selected, click button to  -->
-    <input type="hidden" id="get-fragment" value="Copy song fragment" />
-    </p>
+    <!-- <input type="hidden" id="get-fragment" value="Copy song fragment" /> -->
+    <!-- </p> -->
 
-    <form style="display:none;" id="userinput" action="/save" method="POST">
+    <!-- <form style="display:none;" id="userinput" action="/save" method="POST">
     Fragment <textarea id="fragment" name='fragment'></textarea><br>
     Annotation <textarea name='annotation'></textarea><br>
     <input type='hidden' name='song_title' value="">
@@ -61,26 +64,23 @@
     <input type='submit' value='Save'>
     </form>
 
-    <table id="q_annotations">
+    <table id="q_annotations"> -->
         <!-- append rows from query -->
-    </table>
-
-    {% block content %}{% endblock %}
-    {% block jquery %}{% endblock %}
+    <!-- </table> -->
 
 
-    <script>
+
+<!--     <script>
 // const fragment = $('fragment').attr('value')
 // Get selected text
 // when get-fragment button is clicked, put the selected text in textarea
 
     $('#get-fragment').on('click', function(){
-        $('#lyrics').focus();
         $('#fragment').text($.selection());
 
     });
-    </script>
-
+    </script> -->
+<!-- 
     <script>
     // TODO: consolidate ajax code for clicking a song link and using the search bar 
             // multiple selectors, 'clicked'
@@ -159,6 +159,7 @@
 
             $('#song-suggestions').empty();
             $('#all-songs').empty();
+            $('#annos-by-user').empty();
         });
     });
 
@@ -170,6 +171,6 @@
         $('#annos-by-user').empty()
     });
 
-    </script>
+    </script> -->
 </body>
 </html>
