@@ -1,3 +1,47 @@
+
+
+// const SongList = props => {
+//     let songs = "<ul>";
+//     $.get('/json/allsongs', (res) => {
+//         console.log(res['results']);
+//         const results = res['results'];
+//         for (const result of results) {
+//             songs += "<li>";
+//             songs += "<a onClick={props.event} href'#'>";
+//             songs += `${result['song_artist']} - ${result['song_title']}`;
+//             songs += "</a></li>";
+//         };
+//     });
+//     songs += "<li>test</li></ul>";
+//     console.log(songs);
+//     return songs
+// }
+
+// HARDCODED WORKS
+// const SongList = (props) => {
+//     const songItems = [];
+//     let song = 'Tierra Whack - Hungry Hippo';
+//     songItems.push(<li><a onClick={props.event} href='#'>{song}</a></li>);
+//     songItems.push(<li><a onClick={props.event} href="#">SHAED - Trampoline</a></li>);
+//     return songItems
+// }
+
+// TRY WITH AJAX REQUEST
+// const SongList = (props) => {
+//     $.get('/json/allsongs', (res) => {
+//         const songItems = [];
+//         for (const result of res) {
+//             // let song = 'Tierra Whack - Hungry Hippo';
+//             let song = `${result['song_artist']} - ${result['song_title']}`
+//             console.log(song);
+//             songItems.push(<li><a onClick={props.event} href='#'>{song}</a></li>);
+//             // songItems.push(<li><a onClick={props.event} href="#">SHAED - Trampoline</a></li>);
+//         }
+//         return songItems
+//     });
+// }
+
+
 class App extends React.Component {
     constructor() {
         super();
@@ -12,26 +56,23 @@ class App extends React.Component {
             songAnnotations: false,
             annotations: "",
             songSuggestions: true
+            // songs: "<li><a onClick={this.handleClick} href='#'>state test Adele - Send My Love (To Your New Lover)</a></li>",
+            // songsLoaded: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelection = this.handleSelection.bind(this);
         this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleLink(evt){
-        evt.preventDefault();
-        $.get('/json/allsongs', (res) => {
-            let lineitems = "<li>test 1st</li>";
-            for (const result of res.results) {
-                lineitems += "<li><a href='#' "
-                lineitems += "onClick={this.handleLinkSong}>"
-                lineitems += `${result['song_artist']} - ${result['song_title']}</a></li>`;
-            };
-            this.setState({ songs: lineitems });
-        });
 
     }
+
+    // componentDidMount() {
+    //     $.get('/json/allsongs', (res) => {
+    //         console.log(res['results']);
+    //         this.setState({ songs: res['results'], songsLoaded: true});
+    //     });
+
+    // }
 
     handleSubmit(evt) {
         evt.preventDefault();
@@ -117,20 +158,37 @@ class App extends React.Component {
         } else {
             displayAnnos = { display: 'none' };
         };
-        let displaySongs = null;
+        let displaySuggestions = null;
         if (!this.state.songSuggestions) {
-            displaySongs = { display: 'none' };
+            displaySuggestions = { display: 'none' };
         };
+
+        // const songs = this.state.songs;
+        // let songListItems = "";
+        // if (this.state.songsLoaded) {
+        //     for (const song of songs) {
+        //         songListItems += "<li>";
+        //         songListItems += `<a onClick={this.handleClick} href='#'>`;
+        //         songListItems += `${song['song_artist']} - ${song['song_title']}`;
+        //         songListItems += "</a>"
+        //         songListItems += "</li>";
+        //     };
+        // };
+        // console.log(songListItems);
+
+                //         <ul>
+                // <SongList event={this.handleClick} />
+                // </ul>
+
 
         return (
             <div>
                 <nav>
                     <a href="/">LyricBuddy</a> | 
-                    <a onClick={this.handleLink} href="">All Songs</a> |
+                    <a onClick={this.handleSongs} href="#">All Songs</a> |
                     <a href="/user-annos">Account</a>
                 </nav>
                 <br />
-
                 <form onSubmit={this.handleSubmit}>
                     <input type="text" name="q" placeholder="Artist, Song" />
                     <input type="submit" value="Search" />
@@ -140,8 +198,9 @@ class App extends React.Component {
                 &nbsp;<img id="catGif" height="16px" src="/static/img/nyancat.gif" />
                 &nbsp;Loading...
                 </span>
-                
-                <ul style={displaySongs}>
+                <br />
+                <ul style={displaySuggestions}>
+                <b>Song Suggestions:</b>
                 <li><a onClick={this.handleClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
                 <li><a onClick={this.handleClick} href="#">Beyoncé - Run the World (Girls)</a></li>
                 <li><a onClick={this.handleClick} href="#">Halsey - Graveyard</a></li>
@@ -152,6 +211,7 @@ class App extends React.Component {
                 <li><a onClick={this.handleClick} href="#">Tierra Whack - Hungry Hippo</a></li>
                 </ul>
 
+                
                 <div id="song-data" style={displayData}>
                     <br />
                     <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
