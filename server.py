@@ -220,12 +220,12 @@ def user_annos():
 #         flash('Please sign-in')
 #         return redirect('/user-reg')
 
-# @app.route("/songs")
-# def songs():
+@app.route("/annosongs")
+def annosongs():
 
-#     songs = Song.query.all()
-#     return render_template("songs.html",
-#                             songs = songs)
+    songs = Song.query.all()
+    return render_template("songs.html",
+                            songs = songs)
 
 # @app.route("/songs/<int:song_id>")
 # def song(song_id):
