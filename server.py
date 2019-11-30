@@ -162,6 +162,10 @@ def user_session():
 def save():
     """Testing get user input and save to database"""
 
+    if not session.get('current_user'):
+        flash('Please sign-in')
+        return redirect('/user-reg')
+
     annotation = request.form["annotation"]
     fragment = request.form["fragment"]
     song_title = request.form["song_title"]
