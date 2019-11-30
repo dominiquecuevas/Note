@@ -126,7 +126,7 @@ def songs():
 
     allsongs = {'results': []}
     songs = db.session.query(Song.song_title, Song.song_artist).all()
-    print(songs)
+    # print(songs)
     if songs:
         for song_tuple in songs:
             allsongs['results'].append({
