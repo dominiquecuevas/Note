@@ -28,10 +28,10 @@ def homepage():
 
     return render_template("react.html")
 
-@app.route("/react")
-def react():
+# @app.route("/react")
+# def react():
 
-    return render_template("react.html")
+#     return render_template("react.html")
 
 # @app.route("/results")
 # def results():
@@ -121,20 +121,20 @@ def api_search():
 
     return jsonify(search_dict)
 
-@app.route("/json/allsongs")
-def songs():
+# @app.route("/json/allsongs")
+# def songs():
 
-    allsongs = {'results': []}
-    songs = db.session.query(Song.song_title, Song.song_artist).all()
-    # print(songs)
-    if songs:
-        for song_tuple in songs:
-            allsongs['results'].append({
-                                'song_title': song_tuple[0],
-                                'song_artist': song_tuple[1]
-                                })
+#     allsongs = {'results': []}
+#     songs = db.session.query(Song.song_title, Song.song_artist).all()
+#     # print(songs)
+#     if songs:
+#         for song_tuple in songs:
+#             allsongs['results'].append({
+#                                 'song_title': song_tuple[0],
+#                                 'song_artist': song_tuple[1]
+#                                 })
 
-    return jsonify(allsongs)
+#     return jsonify(allsongs)
 
 
 @app.route("/user-reg")
