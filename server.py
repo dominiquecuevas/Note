@@ -3,6 +3,7 @@ import requests
 from jinja2 import StrictUndefined
 from model import connect_db, db, Song, User, Annotation, seed_data
 import genius
+import geniushits
 
 from bs4 import BeautifulSoup
 import requests
@@ -26,7 +27,7 @@ def homepage():
     # if not session.get('current_user'):
     #     return redirect("/user-reg")
 
-    return render_template("react.html")
+    return render_template("reacthits.html")
 
 # @app.route("/react")
 # def react():
@@ -93,6 +94,24 @@ def homepage():
 #                             video_url=video_url,
 #                             q_annotations=q_annotations)
 
+# @app.route("/hits")
+# def hits():
+
+#     # if not session.get('current_user'):
+#     #     return redirect("/user-reg")
+
+#     return render_template("reacthits.html")
+
+@app.route("/api/hits")
+def api_hits():
+
+    search = request.args.get('q')
+    # a dictionary of api data
+    search_dict = geniushits.search(search)
+
+    return jsonify(search_dict)
+
+
 @app.route("/api/search")
 def api_search():
 
@@ -121,20 +140,20 @@ def api_search():
 
     return jsonify(search_dict)
 
-# @app.route("/json/allsongs")
-# def songs():
+@app.route("/annosongs.json")
+def songs():
 
-#     allsongs = {'results': []}
-#     songs = db.session.query(Song.song_title, Song.song_artist).all()
-#     # print(songs)
-#     if songs:
-#         for song_tuple in songs:
-#             allsongs['results'].append({
-#                                 'song_title': song_tuple[0],
-#                                 'song_artist': song_tuple[1]
-#                                 })
+    allsongs = []
+    songs = db.session.query(Song.song_title, Song.song_artist).all()
+    # print(songs)
+    if songs:
+        for song_tuple in songs:
+            allsongs.append({
+                                'song_title': song_tuple[0],
+                                'song_artist': song_tuple[1]
+                                })
 
-#     return jsonify(allsongs)
+    return jsonify(allsongs)
 
 
 @app.route("/user-reg")
