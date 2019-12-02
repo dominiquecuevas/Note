@@ -3,7 +3,7 @@ import requests
 from jinja2 import StrictUndefined
 from model import connect_db, db, Song, User, Annotation, seed_data
 import genius
-import geniushits
+import genius_hits
 
 from bs4 import BeautifulSoup
 import requests
@@ -107,7 +107,7 @@ def api_hits():
 
     search = request.args.get('q')
     # a dictionary of api data
-    search_dict = geniushits.search(search)
+    search_dict = genius_hits.search(search)
 
     return jsonify(search_dict)
 
