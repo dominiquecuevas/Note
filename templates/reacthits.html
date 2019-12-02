@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block script %}
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+    <script
+              src="https://code.jquery.com/jquery-3.4.1.js"
+              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+              crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="static/jquery.selection.js"></script>
+
+    <style>
+    form {display: inline;}
+    input {display: inline;}
+    #lyrics {
+            height: 500px;
+            width: 640px; 
+            overflow: auto;}
+    </style>
+{% endblock %}
+
+{% block title %}LyricBuddy{% endblock %}
+
+{% block content %}
+  <div id="root">
+  </div>
+  <script type="text/jsx" src="/static/apphits.jsx"></script>
+{% endblock %}
