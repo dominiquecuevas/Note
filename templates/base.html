@@ -3,17 +3,13 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
 
-<!--     <script
-              src="https://code.jquery.com/jquery-3.4.1.js"
-              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-              crossorigin="anonymous"></script>
-    <script type="text/javascript" src="static/jquery.selection.js"></script> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     {% block script %}{% endblock %}
 
 </head>
 <body>
-    <nav>
+    <nav class="nav">
         <a href="/">LyricBuddy</a> | 
         <a href="/annosongs">Annotated Songs</a> |
         <a href="/user-annos">Account</a>
@@ -24,158 +20,11 @@
     {% endfor %}
     </ul>
     <br>
-<!--     <nav>
-        <a href="/">LyricBuddy</a> | 
-        <a href="/songs">All Songs</a> |
-        <a href="/user-annos">Account</a> | 
-            <form id="searchForm">
-    <input id="searchTerm" type="text" placeholder="Artist, Song">
-    <input id="search" type="submit" value="Search">
-    </form>
-    </nav>
-    <br> -->
+
     {% block content %}{% endblock %}
 
-<!--     <br>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <iframe id="ytplayer" type="text/html" width="0" height="0" frameborder="0">
-    </iframe> -->
-
-<!-- DISABLING JINJA VARIABLES TO REFACTOR TO  -->
-<!--     <h2 id="title"></h2>
-    <h3 id="artist"></h3>
-    <p id="lyrics"> -->
-        <!-- jinja block to pass through html code -->
-<!--         <a class="song-link" href="/joji-demons">Demons - Joji</a><br>
-        <a class="song-link" href="/khalid-talk">Talk - Khalid</a><br>
-        <a class="song-link" href="/lil-nas-x-panini">Panini - Lil Nas X</a>
-        {% autoescape false %}
-
-        {% endautoescape %} -->
-    <!-- </p> -->
-
-    <!-- <p> -->
-    <!-- while text selected, click button to  -->
-    <!-- <input type="hidden" id="get-fragment" value="Copy song fragment" /> -->
-    <!-- </p> -->
-
-    <!-- <form style="display:none;" id="userinput" action="/save" method="POST">
-    Fragment <textarea id="fragment" name='fragment'></textarea><br>
-    Annotation <textarea name='annotation'></textarea><br>
-    <input type='hidden' name='song_title' value="">
-    <input type='hidden' name='song_artist' value="">
-    <input type='hidden' name='lyrics' value="">
-    <input type='hidden' name='video_url' value="">
-    <input type='submit' value='Save'>
-    </form>
-
-    <table id="q_annotations"> -->
-        <!-- append rows from query -->
-    <!-- </table> -->
-
-
-
-<!--     <script>
-// const fragment = $('fragment').attr('value')
-// Get selected text
-// when get-fragment button is clicked, put the selected text in textarea
-
-    $('#get-fragment').on('click', function(){
-        $('#fragment').text($.selection());
-
-    });
-    </script> -->
-<!-- 
-    <script>
-    // TODO: consolidate ajax code for clicking a song link and using the search bar 
-            // multiple selectors, 'clicked'
-    $('.song-link').on('click', (evt) => {
-        const link = $(evt.target);
-        evt.preventDefault();
-
-        const q = link.html();
-        $.get(`/api/search?q=${q}`, (res) => {
-            $('#lyrics').html(res.lyrics);
-            $('input[name="lyrics"]').val(res.lyrics);
-
-            // TODO: do that stuff up there ^^^^ but for everything else :D
-
-            $('#title').html(res.song_title);
-            $('input[name="song_title"]').val(res.song_title);
-
-            $('#artist').html(res.song_artist);
-            $('input[name="song_artist"]').val(res.song_artist);
-            
-            $('input[name="video_url"]').val(res.video_url);
-            // width="640" height="360" frameborder="0"
-            $('iframe').attr({'width':640, 'height':360});
-            $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
-
-            $('#q_annotations').empty();
-            if (res.song_annos.length) {
-                $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
-                for (const song_anno of res.song_annos) {
-                    $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
-                };
-            };
-
-            $('#userinput').attr('style','');
-            $('#get-fragment').attr('type','button');
-
-            $('#song-suggestions').empty();
-        });
-    });
-
-    $('#search').on('click', (evt) => {
-        evt.preventDefault();
-
-        const q = $('#searchTerm').val();
-        $.get(`/api/search?q=${q}`, (res) => {
-            $('#lyrics').html(res.lyrics);
-            $('input[name="lyrics"]').val(res.lyrics);
-
-            // TODO: do that stuff up there ^^^^ but for everything else :D
-
-            $('#title').html(res.song_title);
-            $('input[name="song_title"]').val(res.song_title);
-
-            $('#artist').html(res.song_artist);
-            $('input[name="song_artist"]').val(res.song_artist);
-            
-            $('input[name="video_url"]').val(res.video_url);
-            // width="640" height="360" frameborder="0"
-            $('iframe').attr({'width':640, 'height':360});
-            $('iframe').attr('src', `https://www.youtube.com/embed/${res.video_url}?autoplay=0`);
-
-            $('#q_annotations').empty();
-            if (res.song_annos.length) {
-                $('#q_annotations').append('<tr><th>Fragment</th><th>Annotation</th></tr>');
-                for (const song_anno of res.song_annos) {
-                    $('#q_annotations').append(`<tr id="${song_anno[0]}"></tr>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[1]}</td>`);
-                    $(`#${song_anno[0]}`).append(`<td>${song_anno[2]}</td>`);
-                };
-            };
-
-            $('#userinput').attr('style','');
-            $('#get-fragment').attr('type','button');
-
-            $('#song-suggestions').empty();
-            $('#all-songs').empty();
-            $('#annos-by-user').empty();
-        });
-    });
-
-    $('#all-songs a').on('click', (evt) => {
-        $('#all-songs').empty()
-    });
-
-    $('#annos-by-user a').on('click', (evt) => {
-        $('#annos-by-user').empty()
-    });
-
-    </script> -->
 </body>
 </html>
