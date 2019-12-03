@@ -9,10 +9,10 @@
 
 </head>
 <body>
-    <nav class="nav">
-        <a href="/">LyricBuddy</a> | 
-        <a href="/annosongs">Annotated Songs</a> |
-        <a href="/user-annos">Account</a>
+    <nav class="navbar sticky-top navbar-light bg-light justify-content-start">
+        <a class="navbar-brand" href="/">LyricBuddy</a> | 
+        <a class="nav-link" href="/annosongs">Annotated Songs</a> |
+        <a class="nav-link" href="/user-annos">Account</a>
     </nav>
     <ul>
     {% for messages in get_flashed_messages() %}
