@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block content %}
+<span id="loadingcat" style="visibility: hidden;">
+    &nbsp;<img id="catGif" src="/static/img/nyancat.gif" />
+    &nbsp;Loading...
+</span>
+<br>
+<br>
 <div id="annos-by-user">
     <b>Name: </b>{{ user.name }}<br>
     <br>
@@ -36,11 +42,6 @@
         {% endfor %}
         </table>
 </div>
-<br>
-<span id="loadingcat" style="visibility: hidden;">
-&nbsp;<img id="catGif" height="16px" src="/static/img/nyancat.gif" />
-&nbsp;Loading...
-</span>
 
 <h2 id="title"></h2>
 <h3 id="artist"></h3>
