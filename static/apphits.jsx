@@ -107,22 +107,28 @@ class App extends React.Component {
         };
 
         return (
-            <div>
+            <div className="container-fluid">
+                <div className="row position-fixed">
+                <div className="col">
                 <form id="search" onSubmit={this.handleSubmit}>
                     <input type="text" name="q" placeholder="Artist, Song" />
                     <input type="submit" value="Search" />
                 </form>
 
                 <span style={this.state.catData}>
-                &nbsp;<img id="catGif" height="16px" src="/static/img/nyancat.gif" />
+                &nbsp;<img id="catGif" src="/static/img/nyancat.gif" />
                 &nbsp;Loading...
                 </span>
+                </div>
+                </div>
+
                 <br />
 
                 <ul style={displayHits}>{this.state.hits}</ul>
 
                 <ul style={displaySuggestions}>
-                <b>Song Suggestions:</b>
+                <br />
+                <b>Staff picks:</b>
                 <li><a onClick={this.handleClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
                 <li><a onClick={this.handleClick} href="#">Beyoncé - Run the World (Girls)</a></li>
                 <li><a onClick={this.handleClick} href="#">Halsey - Graveyard</a></li>
@@ -134,21 +140,26 @@ class App extends React.Component {
                 </ul>
 
                 
-                <div id="song-data" style={displayData}>
-                    <br />
-                    <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
+                <div className="row" id="song-data" style={displayData}>
+                    <div className="col-4">
                     <h2>{this.state.title}</h2>
                     <h3>{this.state.artist}</h3>
                     <div id="lyrics" dangerouslySetInnerHTML={{__html: this.state.lyrics}}></div>
+                    </div>
+                    
+                    <div className="col-4">
+                    <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
                     <p>
                     <button onClick={this.handleSelection} id="get-fragment">Copy song fragment</button>
                     </p>
                     <form action="/save" method="POST">
-                        Fragment
-                        <div id="fragment">
+                      <div className="form-group">
+                        <label for="fragment">Fragment</label>
+                        <div className="form-control" id="fragment">
                             {this.state.fragment}
                         </div>
-                        Annotation <textarea name="annotation"></textarea><br />
+                        <label for="annotation">Annotation</label>
+                        <textarea className="form-control" name="annotation"></textarea><br />
 
                         <input type="hidden" name="fragment" value={this.state.fragment} />
                         <input type="hidden" name="song_title" value={this.state.title} />
@@ -156,9 +167,12 @@ class App extends React.Component {
                         <input type="hidden" name="lyrics" value={this.state.lyrics} />
                         <input type="hidden" name="video_url" value={this.state.video} />
                         <input type="submit" value="Save" />
+                        </div>
                     </form>
                     <table id="q_annotations" style={displayAnnos} dangerouslySetInnerHTML={{__html: this.state.annotations}}>
                     </table>
+                    </div>
+
                 </div>
             </div>
         );
