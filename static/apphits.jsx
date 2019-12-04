@@ -142,35 +142,50 @@ class App extends React.Component {
                 
                 <div className="row" id="song-data" style={displayData}>
                     <div className="col-4">
-                    <h2>{this.state.title}</h2>
-                    <h3>{this.state.artist}</h3>
-                    <div id="lyrics" dangerouslySetInnerHTML={{__html: this.state.lyrics}}></div>
+                        <h2>{this.state.title}</h2>
+                        <h3>{this.state.artist}</h3>
+                        <div id="lyrics" dangerouslySetInnerHTML={{__html: this.state.lyrics}}></div>
                     </div>
                     
                     <div className="col-4">
-                    <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
-                    <p>
-                    <button onClick={this.handleSelection} id="get-fragment">Copy song fragment</button>
-                    </p>
-                    <form action="/save" method="POST">
-                      <div className="form-group">
-                        <label for="fragment">Fragment</label>
-                        <div className="form-control" id="fragment">
-                            {this.state.fragment}
-                        </div>
-                        <label for="annotation">Annotation</label>
-                        <textarea className="form-control" name="annotation"></textarea><br />
+                        <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
+                        <p>
+                            <button onClick={this.handleSelection} id="get-fragment" className="btn btn-primary" data-toggle="modal" data-target="#modal">Copy song fragment</button>
+                        </p>
+                        <form action="/save" method="POST">
+                          <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                  <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Input Annotation</h5>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <label for="fragment">Fragment</label>
+                                    <div className="form-control" id="fragment">
+                                        {this.state.fragment}
+                                    </div>
+                                    <label for="annotation">Annotation</label>
+                                    <textarea className="form-control" name="annotation"></textarea><br />
 
-                        <input type="hidden" name="fragment" value={this.state.fragment} />
-                        <input type="hidden" name="song_title" value={this.state.title} />
-                        <input type="hidden" name="song_artist" value={this.state.artist} />
-                        <input type="hidden" name="lyrics" value={this.state.lyrics} />
-                        <input type="hidden" name="video_url" value={this.state.video} />
-                        <input type="submit" value="Save" />
-                        </div>
-                    </form>
-                    <table id="q_annotations" style={displayAnnos} dangerouslySetInnerHTML={{__html: this.state.annotations}}>
-                    </table>
+                                    <input type="hidden" name="fragment" value={this.state.fragment} />
+                                    <input type="hidden" name="song_title" value={this.state.title} />
+                                    <input type="hidden" name="song_artist" value={this.state.artist} />
+                                    <input type="hidden" name="lyrics" value={this.state.lyrics} />
+                                    <input type="hidden" name="video_url" value={this.state.video} />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" class="btn btn-primary" value="Save" />
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                        <table id="q_annotations" style={displayAnnos} dangerouslySetInnerHTML={{__html: this.state.annotations}}>
+                        </table>
                     </div>
 
                 </div>
