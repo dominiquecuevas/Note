@@ -183,13 +183,14 @@ class App extends React.Component {
                     <a className="nav-link" onClick={this.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
                     <a className="nav-link" onClick={this.handleUserAnnos} href="/user-annos">Account</a>
                 </nav>
+                <br />
                 <div className="container-fluid">
 
                     <div className="row position-fixed">
                         <div className="col">
                             <form id="search" onSubmit={this.handleSubmit}>
-                                <input type="text" name="q" placeholder="Artist, Song" />
-                                <input type="submit" value="Search" />
+                                <input type="text" className="form-control" name="q" placeholder="Artist, Song" />
+                                <input type="submit" className="btn btn-primary" value="Search" />
                             </form>
 
                             <span style={this.state.catData}>

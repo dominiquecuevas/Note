@@ -3,9 +3,34 @@
 {% block title %}User Registration{% endblock %}
 
 {% block content %}
-    <form action="/user" method="POST">
-        Name <input type="text" name="name"><br>
-        Email <input type="text" name="email"><br>
-        <input type="submit">
-    </form>
+<nav id="nav" class="navbar sticky-top navbar-light bg-light justify-content-start">
+    <a class="navbar-brand" href="/"><img src="/static/img/headphones.png" height="30px"> LyricBuddy</a> | 
+    <a class="nav-link" href="/">Annotated Songs</a> |
+    <a class="nav-link" href="/">Account</a>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <a className="navbar-brand" href="/">
+                <img src="/static/img/headphones.png" height="30px" /> LyricBuddy
+            </a>
+            <br>
+            <form id="login" action="/user" method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" name="name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="text" name="email" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
