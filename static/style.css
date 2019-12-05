@@ -2,6 +2,22 @@ form {display: inline;}
 
 input {display: inline;}
 
+body {
+  background: linear-gradient(to left top, #4e167d, #ffdcce) fixed;
+}
+
+/*#nav {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), transparent);
+}
+*/
+
+/*#nav {
+  background: linear-gradient(to right left, #ffdcce, #4e167d) fixed;
+}*/
+
+#nav {opacity: .7;}
+
+
 #catGif {
         height: 18px;
 

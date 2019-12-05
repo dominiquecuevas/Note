@@ -11,37 +11,46 @@
 {% endblock %}
 
 {% block content %}
-<span id="loadingcat" style="visibility: hidden;">
-    &nbsp;<img id="catGif" src="/static/img/nyancat.gif" />
-    &nbsp;Loading...
-</span>
-<br>
-<br>
-<table id="all-songs" class="table table-striped table-bordered">
-    <tr>
-        <th>Song</th>
-        <th>Number of Annotations</th>
 
-    </tr>
-    {% for song in songs %}
-    <tr>
-        <td><a class="song-link" href="/">{{ song.song_artist }} - {{ song.song_title }}</a>
-        </td>
-        <td>{{ song.annotations | length }}
-        </td>
-    </tr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <span id="loadingcat" style="visibility: hidden;">
+            &nbsp;<img id="catGif" src="/static/img/nyancat.gif" />
+            &nbsp;Loading...
+            </span>
+            <br>
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <table id="all-songs" class="table table-striped table-bordered">
+                <tr>
+                    <th>Song</th>
+                    <th>Number of Annotations</th>
 
-    {% endfor %}
-</table>
+                </tr>
+                {% for song in songs %}
+                <tr>
+                    <td><a class="song-link" href="/">{{ song.song_artist }} - {{ song.song_title }}</a>
+                    </td>
+                    <td>{{ song.annotations | length }}
+                    </td>
+                </tr>
 
-<br>
+                {% endfor %}
+            </table>
 
-<table id="q_annotations">
-</table>
+            <table id="q_annotations" class="table table-striped table-bordered">
+            </table>
 
-<h2 id="title"></h2>
-<h3 id="artist"></h3>
-<div id="lyrics"></div>
+            <h2 id="title"></h2>
+            <h3 id="artist"></h3>
+            <div id="lyrics"></div>
+        </div>
+    </div>
+</div>
 
 <script>
 

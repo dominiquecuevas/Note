@@ -145,10 +145,13 @@ class App extends React.Component {
 
                 <div className="row" id="song-data" style={displayData}>
 
-                    <div className="table container-t col-4">
+                    <div className="table container-t col-5">
                         <div className="table-row header">
                             <h2>{this.state.title}</h2>
                             <h3>{this.state.artist}</h3>
+                            <p>
+                                <button onClick={this.handleSelection} id="get-fragment" className="btn btn-primary" data-toggle="modal" data-target="#modal">Highlight lyrics to annotate and click me!</button>
+                            </p>
                         </div>
 
                         <div class="table-row body">
@@ -161,10 +164,8 @@ class App extends React.Component {
                     </div>
                     
                     <div className="col-4">
+
                         <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
-                        <p>
-                            <button onClick={this.handleSelection} id="get-fragment" className="btn btn-primary" data-toggle="modal" data-target="#modal">Copy song fragment</button>
-                        </p>
                         <form action="/save" method="POST">
                             <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div className="modal-dialog" role="document">
@@ -197,7 +198,7 @@ class App extends React.Component {
                                 </div>
                             </div>
                         </form>
-                        <table id="q_annotations" style={displayAnnos} dangerouslySetInnerHTML={{__html: this.state.annotations}}>
+                        <table id="q_annotations" style={displayAnnos} className="table table-striped table-bordered" dangerouslySetInnerHTML={{__html: this.state.annotations}}>
                         </table>
                     </div>
                 </div>
