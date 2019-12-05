@@ -24,6 +24,10 @@ GENIUS_URL = "https://api.genius.com/"
 @app.route("/")
 def homepage():
 
+    if not session.get('current_user'):
+        flash('Please sign-in')
+        return redirect('/user-reg')
+
     return render_template("reacthits.html")
 
 @app.route("/api/hits")
@@ -157,6 +161,23 @@ def user_annos():
         flash('Please sign-in')
         return redirect('/user-reg')
 
+@app.route("/user-annos.json")
+def user_annos_json():
+
+    user = User.query.get(session['current_user'])
+    annotations = user.annotations
+
+    anno_list = []
+    for annotation in annotations:
+        anno_list.append({
+                        'song_artist': annotation.song.song_artist,
+                        'song_title': annotation.song.song_title,
+                        'song_fragment':annotation.song_fragment,
+                        'annotation':annotation.annotation
+                        })
+    return jsonify({'user_name': user.name,
+                    'user_email': user.email,
+                    'anno_list': anno_list})
 
 @app.route("/annosongs")
 def annosongs():
