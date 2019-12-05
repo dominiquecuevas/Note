@@ -145,7 +145,7 @@ def save():
     db.session.add(new_annotation)
     db.session.commit()
 
-    return redirect("/user-annos")
+    return redirect("/")
 
 
 @app.route("/user-annos")
