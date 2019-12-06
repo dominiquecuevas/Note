@@ -25,7 +25,7 @@ GENIUS_URL = "https://api.genius.com/"
 def homepage():
 
     if not session.get('current_user'):
-        flash('Please sign-in')
+        # flash('Please sign-in')
         return redirect('/user-reg')
 
     return render_template("reacthits.html")
