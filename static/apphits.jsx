@@ -8,7 +8,7 @@ class App extends React.Component {
             video: "",
             songDataLoaded: false,
             fragment: "",
-            catData: { display: 'none' },
+            showLoadingGif: false,
             songAnnotations: false,
             annotations: "",
             songSuggestions: true,
@@ -36,7 +36,7 @@ class App extends React.Component {
         evt.preventDefault();
         const q = $(evt.target).serialize();
         this.setState({
-                        catData: null
+                        showLoadingGif: true
                      });
 
         $.get(`/api/hits?${q}`, (res) => {
@@ -47,7 +47,7 @@ class App extends React.Component {
             };
             this.setState({
                             hits: songs,
-                            catData: { display: 'none' },
+                            showLoadingGif: false,
                             songSuggestions: false,
                             searchHits : true,
                             songDataLoaded: false,
@@ -59,7 +59,7 @@ class App extends React.Component {
 
     handleAnnoSongs(evt) {
         evt.preventDefault();
-        this.setState({catData: null});
+        // this.setState({showLoadingGif: true});
 
         $.get('/annosongs.json', (res) => {
             let songs = [];
@@ -70,7 +70,7 @@ class App extends React.Component {
             this.setState({
                             annoSongs: songs,
                             annoSongsLoaded: true,
-                            catData: {display: 'none'},
+                            // showLoadingGif: false,
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
@@ -81,7 +81,7 @@ class App extends React.Component {
 
     handleUserAnnos(evt) {
         evt.preventDefault();
-        this.setState({catData: null});
+        // this.setState({showLoadingGif: true});
 
         $.get('/user-annos.json', (res) => {
             let annos = [];
@@ -95,7 +95,7 @@ class App extends React.Component {
                             userEmail: res.user_email,
                             userAnnos: annos,
                             userAnnosLoaded: true,
-                            catData: {display: 'none'},
+                            // showLoadingGif: false,
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
@@ -108,12 +108,12 @@ class App extends React.Component {
     handleClick(evt) {
         evt.preventDefault();
         const q = $(evt.target).html();
-        this.setState({catData: null});
+        this.setState({showLoadingGif: true});
 
         $.get(`/api/search?q=${q}`, (res) => {
             if (res.song_annos.length) {
                 this.setState({ songAnnotations: true });
-                let annotations = "<tr><th>Fragment</th><th>Annotation</th></tr>"
+                let annotations = "<tr><th>Lyrics Fragment</th><th>Annotation</th></tr>";
                 for (const song_anno of res.song_annos) {
                     annotations+=`<tr id="${song_anno['anno_id']}"></tr>`
                     annotations+=`<td>${song_anno['song_fragment']}</td>`
@@ -131,7 +131,7 @@ class App extends React.Component {
                 lyrics: res.lyrics,
                 video: `https://www.youtube.com/embed/${res.video_url}?autoplay=0`,
                 songDataLoaded: true,
-                catData: { display: 'none' },
+                showLoadingGif: false,
                 songSuggestions: false,
                 searchHits: false ,
                 annoSongsLoaded: false,
@@ -183,35 +183,49 @@ class App extends React.Component {
                     <a className="nav-link" onClick={this.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
                     <a className="nav-link" onClick={this.handleUserAnnos} href="/user-annos">Account</a>
                 </nav>
-                <br />
-                <div className="container-fluid">
 
-                    <div className="row position-fixed">
+                <br />
+
+                <div className="container-fluid">
+                    <div className="row">
                         <div className="col">
-                            <form id="search" onSubmit={this.handleSubmit}>
-                                <input type="text" className="form-control" name="q" placeholder="Artist, Song" />
+                            <form
+                                id="search"
+                                onSubmit={this.handleSubmit}
+                                className="d-flex"
+                            >
+                                <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song" />
                                 <input type="submit" className="btn btn-primary" value="Search" />
                             </form>
 
-                            <span style={this.state.catData}>
-                            &nbsp;<img id="catGif" src="/static/img/nyancat.gif" />
-                            &nbsp;Loading...
-                            </span>
+                            <div
+                                className="loading-gif"
+                                style={(
+                                    this.state.showLoadingGif ?
+                                    {visibility: 'visible'} :
+                                    {visibility: 'hidden'}
+                                )}>
+                                <div>
+                                    <img id="catGif" src="/static/img/nyancat.gif" />
+                                </div>
+                                <span>Loading...</span>
+                            </div>
                         </div>
                     </div>
-                    <br />
-                    <br />
 
                     <div className="row">
                         <div className="col-6">
                             <ul style={displayHits}>{this.state.hits}</ul>
                             <ul style={displayAnnoSongs}>{this.state.annoSongs}</ul>
-                            <table style={displayUserAnnos} className="table table-striped table-bordered">
+
+                            <div style={displayUserAnnos}>
                                 <b>Name:</b> {this.state.userName}<br /><br />
                                 <b>Email:</b> {this.state.userEmail}<br /><br />
                                 <b>Your Annotations:</b>
-                                {this.state.userAnnos}
-                            </table>
+                                <table className="table table-striped table-bordered">
+                                    {this.state.userAnnos}
+                                </table>
+                            </div>
 
                             <ul style={displaySuggestions}>
                             <br />
@@ -239,16 +253,16 @@ class App extends React.Component {
                                 </p>
                             </div>
 
-                            <div class="table-row body">
-                                <div class="body-content-wrapper">
-                                    <div class="body-content">
+                            <div className="table-row body">
+                                <div className="body-content-wrapper">
+                                    <div className="body-content">
                                         <div id="lyrics" dangerouslySetInnerHTML={{__html: this.state.lyrics}}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div className="col-4">
+                        <div className="col">
 
                             <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
                             <form action="/save" method="POST">

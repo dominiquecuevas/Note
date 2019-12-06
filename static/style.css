@@ -3,7 +3,7 @@ form {display: inline;}
 input {display: inline;}
 
 body {
-  background: linear-gradient(to left top, #4e167d, #ffdcce) fixed;
+  background: linear-gradient(to left top, #9c73ba, #ffdcce) fixed;
 }
 
 /*#nav {
@@ -15,10 +15,14 @@ body {
   background: linear-gradient(to right left, #ffdcce, #4e167d) fixed;
 }*/
 
+a {color: MidnightBlue;}
+
 #nav {opacity: .7;}
 
 /*#login input {width: 500px;}
 */
+
+body {font-family: Libre Franklin;}
 
 #catGif {
         height: 18px;
@@ -38,7 +42,7 @@ body {
 }
 
 .container-t {
-    height: 580px;
+    height: 540px;
 }
 
 .header {
@@ -63,4 +67,11 @@ body {
     left: 0;
     right: 0;
     overflow: auto;
+}
+
+.loading-gif {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
