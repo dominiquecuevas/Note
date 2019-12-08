@@ -179,7 +179,11 @@ class App extends React.Component {
         return (
             <div>
                 <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
-                    <a className="navbar-brand" href="/"><img src="/static/img/headphones.png" height="30px" /> LyricBuddy</a> | 
+                    <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫✍</span> Note
+                        <br />
+                        <span id="slogan">Annotate lyrics</span>
+                        </a>
+                    </div> | 
                     <a className="nav-link" onClick={this.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
                     <a className="nav-link" onClick={this.handleUserAnnos} href="/user-annos">Account</a>
                 </nav>

@@ -4,7 +4,12 @@
 
 {% block content %}
 <nav id="nav" class="navbar sticky-top navbar-light bg-light justify-content-start">
-    <a class="navbar-brand" href="/"><img src="/static/img/headphones.png" height="30px"> LyricBuddy</a> | 
+    <div id="note">
+        <a class="navbar-brand" href="/"><span id="logo">♫✍</span> Note
+            <br>
+        <span id="slogan">Annotate lyrics</span>
+        </a> 
+    </div> |
     <a class="nav-link" href="/">Annotated Songs</a> |
     <a class="nav-link" href="/">Account</a>
 </nav>
@@ -15,9 +20,12 @@
     <br>
     <div class="row justify-content-center">
         <div class="col-lg-6">
-            <a className="navbar-brand" href="/">
-                <img src="/static/img/headphones.png" height="30px" /> LyricBuddy
-            </a>
+            <div id="note">
+                <a class="navbar-brand" href="/"><span id="logo">♫✍</span> Note
+            <br>
+            <span id="slogan">Annotate lyrics</span>
+                </a> 
+            </div>
             <br>
             <form id="login" action="/user" method="POST">
                 <div class="form-group">
