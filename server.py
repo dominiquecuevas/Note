@@ -59,9 +59,11 @@ def api_search():
     song_annos = []
     if q_annotations:
         for annotation in q_annotations:
+            anno_id = Annotation.query.get(annotation[0])
             song_annos.append({'anno_id': annotation[0], 
             'song_fragment': annotation[1],
-            'annotation': annotation[2]
+            'annotation': annotation[2], 
+            'user.name': anno_id.user.name
             })
 
     search_dict['song_annos'] = song_annos

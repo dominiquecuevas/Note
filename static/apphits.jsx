@@ -52,7 +52,8 @@ class App extends React.Component {
                             searchHits : true,
                             songDataLoaded: false,
                             annoSongsLoaded: false,
-                            userAnnosLoaded: false
+                            userAnnosLoaded: false,
+                            video: ""
                             });
         });
     }
@@ -74,7 +75,8 @@ class App extends React.Component {
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
-                            userAnnosLoaded: false
+                            userAnnosLoaded: false,
+                            video: ""
                             });
         });
     }
@@ -85,7 +87,7 @@ class App extends React.Component {
 
         $.get('/user-annos.json', (res) => {
             let annos = [];
-            annos.push(<tr><th>Song</th><th>Fragment</th><th>Annotation</th></tr>);
+            annos.push(<tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th></tr>);
             for (const anno of res.anno_list) {
                 annos.push(<tr><td><a onClick={this.handleClick} href="#">{anno.song_artist} - {anno.song_title}</a></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>);
             };
@@ -100,6 +102,7 @@ class App extends React.Component {
                             searchHits : false,
                             songDataLoaded: false,
                             annoSongsLoaded: false,
+                            video: ""
                             });
 
         });
@@ -113,11 +116,12 @@ class App extends React.Component {
         $.get(`/api/search?q=${q}`, (res) => {
             if (res.song_annos.length) {
                 this.setState({ songAnnotations: true });
-                let annotations = "<tr><th>Lyrics Fragment</th><th>Annotation</th></tr>";
+                let annotations = "<tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>";
                 for (const song_anno of res.song_annos) {
                     annotations+=`<tr id="${song_anno['anno_id']}"></tr>`
                     annotations+=`<td>${song_anno['song_fragment']}</td>`
                     annotations+=`<td>${song_anno['annotation']}</td>`
+                    annotations+=`<td>${song_anno['user.name']}</td>`
                     annotations+="</tr>"
                 };
                 this.setState({ annotations: annotations });
@@ -179,9 +183,9 @@ class App extends React.Component {
         return (
             <div>
                 <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
-                    <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫✍</span> Note
+                    <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫✍</span> <b>Note</b>
                         <br />
-                        <span id="slogan">Annotate lyrics</span>
+                        <span id="slogan">Lyrics Annotator</span>
                         </a>
                     </div> | 
                     <a className="nav-link" onClick={this.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
@@ -198,7 +202,7 @@ class App extends React.Component {
                                 onSubmit={this.handleSubmit}
                                 className="d-flex"
                             >
-                                <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song" />
+                                <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song, or Lyrics" />
                                 <input type="submit" className="btn btn-primary" value="Search" />
                             </form>
 
