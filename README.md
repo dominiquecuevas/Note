@@ -9,7 +9,7 @@ https://drive.google.com/file/d/1AWZh4540V8loIpHFwwgIOYoqzvjPD6Lh/view
 ### Prerequisites
 * Python3
 * PostgreSQL
-* Genius.com API key https://genius.com/developers
+* Genius.com API token https://genius.com/developers
 
 ### Installation
 * Clone repository
