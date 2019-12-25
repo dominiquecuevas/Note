@@ -2,7 +2,7 @@
 
 Search for song lyrics to highlight sections and annotate for meaning.
 
-https://j.gifs.com/lx0kQ6.gif
+https://drive.google.com/file/d/1GZSQkTl2uQZGRD4m3YHb_8s9X7OnrWLB/view
 
 ## Getting Started
 ### Prerequisites
