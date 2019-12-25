@@ -1,6 +1,6 @@
 # ♫ Note
 
-Search for song lyrics to highlight sections and annotate for meaning.
+Full stack web app enables users to search song lyrics to highlight and annotate sections for their meaning.
 
 ## Video Demo
 https://drive.google.com/file/d/1AWZh4540V8loIpHFwwgIOYoqzvjPD6Lh/view
