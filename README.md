@@ -24,7 +24,7 @@ https://drive.google.com/file/d/1AWZh4540V8loIpHFwwgIOYoqzvjPD6Lh/view
 
     `$ virtualenv env`
     
-  Command on a Windows machine:
+  Command if on a Windows machine:
     
     `$ virtualenv env --always-copy`
     
