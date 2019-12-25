@@ -25,7 +25,7 @@ Search for song lyrics to highlight sections and annotate for meaning.
 
     `$ virtualenv env`
     
-   or on a Windows machine:
+  Command on a Windows machine:
     
     `$ virtualenv env --always-copy`
     
