@@ -39,7 +39,7 @@ class App extends React.Component {
                         showLoadingGif: true
                      });
 
-        $.get(`/api/hits?${q}`, (res) => {
+        $.get(`/api/search/hits?${q}`, (res) => {
             let songs = [];
             for (const song of res.songs) {
                 console.log(song['song_artist']);
@@ -183,7 +183,7 @@ class App extends React.Component {
         return (
             <div>
                 <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
-                    <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫✍</span> <b>Note</b>
+                    <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫</span> <b>Note</b>
                         <br />
                         <span id="slogan">Lyrics Annotator</span>
                         </a>
