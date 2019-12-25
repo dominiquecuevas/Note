@@ -2,7 +2,12 @@
 
 Search for song lyrics to highlight sections and annotate for meaning.
 
+Search song lyrics
+
 ![](https://j.gifs.com/nxlJEW.gif)
+
+
+Annotate
 
 ![](https://j.gifs.com/71MJEy.gif)
 
