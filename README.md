@@ -6,7 +6,6 @@ Search for song lyrics to highlight sections and annotate for meaning.
 
 ![](https://j.gifs.com/71MJEy.gif)
 
-
 ## Getting Started
 ### Prerequisites
 * Python3
