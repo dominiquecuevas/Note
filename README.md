@@ -1,6 +1,6 @@
 # ♫ Note
 
-Search for song lyrics to highlight sections and annotate for their meaning.
+Search for song lyrics to highlight sections and annotate for meaning.
 
 ![](https://j.gifs.com/nxlJEW.gif)
 
