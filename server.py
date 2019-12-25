@@ -17,7 +17,6 @@ app.secret_key = 'yliwmhd'
 app.jinja_env.undefined = StrictUndefined
 
 GENIUS_TOKEN = os.environ.get('TOKEN')
-# GENIUS_URL = "http://104.17.212.67/"
 GENIUS_URL = "https://api.genius.com/"
 
 
@@ -25,12 +24,11 @@ GENIUS_URL = "https://api.genius.com/"
 def homepage():
 
     if not session.get('current_user'):
-        # flash('Please sign-in')
         return redirect('/user-reg')
 
     return render_template("reacthits.html")
 
-@app.route("/api/hits")
+@app.route("/api/search/hits")
 def api_hits():
 
     search = request.args.get('q')
@@ -51,9 +49,6 @@ def api_search():
     q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, 
                                     Annotation.annotation).filter(Song.song_title==search_dict['song_title'],
                                     Song.song_artist==search_dict['song_artist']).join(Song).all()
-    # print(q_annotations)
-    # test
-    # q_annotations = [['list1', 'list1-2'], ['list2', 'list2-2']]
 
     # add a key-value pair for the search list
     song_annos = []
@@ -76,7 +71,6 @@ def songs():
 
     allsongs = []
     songs = db.session.query(Song.song_title, Song.song_artist).all()
-    # print(songs)
     if songs:
         for song_tuple in songs:
             allsongs.append({
@@ -149,20 +143,6 @@ def save():
 
     return redirect("/")
 
-
-@app.route("/user-annos")
-def user_annos():
-
-    if session.get('current_user'):
-        user = User.query.get(session['current_user'])
-        annotations = user.annotations
-        return render_template("user_annotations.html",
-                                user=user,
-                                annotations=annotations)
-    else:
-        flash('Please sign-in')
-        return redirect('/user-reg')
-
 @app.route("/user-annos.json")
 def user_annos_json():
 
@@ -180,13 +160,6 @@ def user_annos_json():
     return jsonify({'user_name': user.name,
                     'user_email': user.email,
                     'anno_list': anno_list})
-
-@app.route("/annosongs")
-def annosongs():
-
-    songs = Song.query.all()
-    return render_template("songs.html",
-                            songs = songs)
 
 if __name__ == "__main__":
     connect_db(app)
