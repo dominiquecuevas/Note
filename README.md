@@ -2,6 +2,7 @@
 
 Search for song lyrics to highlight sections and annotate for meaning.
 
+## Video Demo
 https://drive.google.com/file/d/1AWZh4540V8loIpHFwwgIOYoqzvjPD6Lh/view
 
 ## Getting Started
