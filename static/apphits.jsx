@@ -1,3 +1,17 @@
+function Nav(props) {
+    return (
+        <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
+        <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫</span> <b>Note</b>
+            <br />
+            <span id="slogan">Lyrics Annotator</span>
+            </a>
+        </div> | 
+        <a className="nav-link" href="/annosongs">Annotated Songs</a> |
+        <a className="nav-link" href="/user-annos">Account</a>
+    </nav>
+    );
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -182,7 +196,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
+                {/* <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
                     <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫</span> <b>Note</b>
                         <br />
                         <span id="slogan">Lyrics Annotator</span>
@@ -190,7 +204,7 @@ class App extends React.Component {
                     </div> | 
                     <a className="nav-link" onClick={this.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
                     <a className="nav-link" onClick={this.handleUserAnnos} href="/user-annos">Account</a>
-                </nav>
+                </nav> */}
 
                 <br />
 
@@ -316,4 +330,4 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<div><Nav /><App /></div>, document.querySelector('#root'));
