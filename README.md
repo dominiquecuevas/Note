@@ -1,22 +1,53 @@
-![](https://j.gifs.com/nxlJEW.gif)
-![](https://j.gifs.com/71MJEy.gif)
-![](https://j.gifs.com/Jy1X4J.gif)
-![](https://j.gifs.com/k8gMGE.gif)
-<!-- 
+# ♫ Note
 
-https://gifs.com/gif/note-screencast-1-nxlJEW
-https://j.gifs.com/nxlJEW.gif
-<iframe src='//gifs.com/embed/note-screencast-1-nxlJEW' frameborder='0' scrolling='no' width='1920px' height='1052px' style='-webkit-backface-visibility: hidden;-webkit-transform: scale(1);' ></iframe>
+Full stack web app enables users to search song lyrics to highlight and annotate sections for their meaning.
 
-https://gifs.com/gif/note-screencast-2-71MJEy
-https://j.gifs.com/71MJEy.gif
-<iframe src='//gifs.com/embed/note-screencast-2-71MJEy' frameborder='0' scrolling='no' width='1920px' height='1052px' style='-webkit-backface-visibility: hidden;-webkit-transform: scale(1);' ></iframe>
+## Video Demo
+https://drive.google.com/file/d/1AWZh4540V8loIpHFwwgIOYoqzvjPD6Lh/view
 
-https://gifs.com/gif/note-screencast-3-Jy1X4J
-https://j.gifs.com/Jy1X4J.gif
-<iframe src='//gifs.com/embed/note-screencast-3-Jy1X4J' frameborder='0' scrolling='no' width='1920px' height='1052px' style='-webkit-backface-visibility: hidden;-webkit-transform: scale(1);' ></iframe>
+## Getting Started
+### Prerequisites
+* Python3
+* PostgreSQL
+* Genius.com API token https://genius.com/developers
 
+### Installation
+* Clone repository
 
-https://gifs.com/gif/note-screencast-4-k8gMGE
-https://j.gifs.com/k8gMGE.gif
-<iframe src='//gifs.com/embed/note-screencast-4-k8gMGE' frameborder='0' scrolling='no' width='1920px' height='1052px' style='-webkit-backface-visibility: hidden;-webkit-transform: scale(1);' ></iframe> -->
+    `$ git clone https://github.com/dominiquecuevas/Note`
+    
+* Create database
+
+    `$ createdb lyrics`
+
+* Create a Virtual Environment
+
+    `$ virtualenv env`
+    
+  Command if on a Windows machine:
+    
+    `$ virtualenv env --always-copy`
+    
+* Activate virtual environment
+
+    `$ source env/bin/activate`
+
+* Create a secrets.sh file with your Genius.com token
+
+    `$ touch secrets.sh`
+
+    ```python
+    export TOKEN=[CLIENT ACCESS TOKEN]
+    ```
+* Load token into shell environment
+
+    `$ source secrets.sh`
+    
+* Install dependencies
+
+    `$ pip install -r requirements.txt`
+    
+* Run the app
+
+    `$ python3 server.py`
+    
