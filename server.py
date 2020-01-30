@@ -65,6 +65,9 @@ def api_search():
 
     return jsonify(search_dict)
 
+@app.route("/annosongs")
+def annosongs():
+    return render_template("annosongs.html")
 
 @app.route("/annosongs.json")
 def songs():
