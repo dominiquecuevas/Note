@@ -1,4 +1,15 @@
-
+function Search(props) {
+    return (
+        <form
+        id="search"
+        onSubmit={props.onSubmit}
+        className="d-flex"
+    >
+        <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song, or Lyrics" />
+        <input type="submit" className="btn btn-primary" value="Search" />
+    </form>
+    )
+}
 
 class App extends React.Component {
     constructor() {
@@ -184,21 +195,11 @@ class App extends React.Component {
 
         return (
             <div>
-                {/* <NavBar /> */}
-
                 <br />
-
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col">
-                            <form
-                                id="search"
-                                onSubmit={this.handleSubmit}
-                                className="d-flex"
-                            >
-                                <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song, or Lyrics" />
-                                <input type="submit" className="btn btn-primary" value="Search" />
-                            </form>
+                            <Search onSubmit={this.handleSubmit}/>
 
                             <div
                                 className="loading-gif"
