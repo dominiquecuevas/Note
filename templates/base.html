@@ -9,23 +9,27 @@
 
     <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:500&display=swap" rel="stylesheet">
 
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    
+    <script type="text/jsx" src="/static/js/NavBar.jsx"></script>
+
+    <script
+              src="https://code.jquery.com/jquery-3.4.1.js"
+              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+              crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="static/jquery.selection.js"></script>
 
     {% block script %}{% endblock %}
 
 </head>
 <body>
-<!--     <nav id="nav" class="navbar sticky-top navbar-light bg-light justify-content-start">
-        <a class="navbar-brand" href="/"><img src="/static/img/headphones.png" height="30px"> LyricBuddy</a> | 
-        <a class="nav-link" href="/annosongs">Annotated Songs</a> |
-        <a class="nav-link" href="/user-annos">Account</a>
-    </nav> -->
-
-<!--     <ul>
-    {% for messages in get_flashed_messages() %}
-        <li>{{ messages }}</li>
-    {% endfor %}
-    </ul> -->
-    {% block content %}{% endblock %}
+    <div id="NavBar">
+    </div>
+    <script type="text/jsx" src="/static/js/NavBar.jsx"></script>
+    {% block content %}<div></div>{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
