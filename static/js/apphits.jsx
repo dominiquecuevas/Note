@@ -28,6 +28,12 @@ function StaffSuggestions(props) {
     )
 }
 
+function Lyrics(props) {
+    return (
+        <div id="lyrics" dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}></div>
+    )
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -267,7 +273,7 @@ class App extends React.Component {
                             <div className="table-row body">
                                 <div className="body-content-wrapper">
                                     <div className="body-content">
-                                        <div id="lyrics" dangerouslySetInnerHTML={{__html: this.state.lyrics}}></div>
+                                        <Lyrics dangerouslySetInnerHTML={{__html: this.state.lyrics}} />
                                     </div>
                                 </div>
                             </div>
