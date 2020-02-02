@@ -11,6 +11,23 @@ function Search(props) {
     )
 }
 
+function StaffSuggestions(props) {
+    return (
+        <ul>
+            <br />
+            <b>Staff picks:</b>
+            <li><a onClick={props.onClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
+            <li><a onClick={props.onClick} href="#">Beyoncé - Run the World (Girls)</a></li>
+            <li><a onClick={props.onClick} href="#">Halsey - Graveyard</a></li>
+            <li><a onClick={props.onClick} href="#">Paramore - The Only Exception</a></li>
+            <li><a onClick={props.onClick} href="#">Selena - Dreaming of You</a></li>
+            <li><a onClick={props.onClick} href="#">SHAED - Trampoline</a></li>
+            <li><a onClick={props.onClick} href="#">Sia - Chandelier</a></li>
+            <li><a onClick={props.onClick} href="#">Tierra Whack - Hungry Hippo</a></li>
+        </ul>
+    )
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -229,19 +246,10 @@ class App extends React.Component {
                                     {this.state.userAnnos}
                                 </table>
                             </div>
-
-                            <ul style={displaySuggestions}>
-                            <br />
-                            <b>Staff picks:</b>
-                            <li><a onClick={this.handleClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
-                            <li><a onClick={this.handleClick} href="#">Beyoncé - Run the World (Girls)</a></li>
-                            <li><a onClick={this.handleClick} href="#">Halsey - Graveyard</a></li>
-                            <li><a onClick={this.handleClick} href="#">Paramore - The Only Exception</a></li>
-                            <li><a onClick={this.handleClick} href="#">Selena - Dreaming of You</a></li>
-                            <li><a onClick={this.handleClick} href="#">SHAED - Trampoline</a></li>
-                            <li><a onClick={this.handleClick} href="#">Sia - Chandelier</a></li>
-                            <li><a onClick={this.handleClick} href="#">Tierra Whack - Hungry Hippo</a></li>
-                            </ul>
+                            <div style={displaySuggestions}>
+                                <StaffSuggestions onClick={this.handleClick} />
+                            </div>
+                            
                         </div>
                     </div>
 
