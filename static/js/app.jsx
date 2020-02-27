@@ -58,6 +58,7 @@ class App extends React.Component {
             video: "",
             songDataLoaded: false,
             fragment: "",
+            annotation: "",
             showLoadingGif: false,
             songAnnotations: false,
             annotations: "",
@@ -77,8 +78,8 @@ class App extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
         this.handleUserAnnos = this.handleUserAnnos.bind(this);
-
-
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
     }
 
@@ -202,6 +203,27 @@ class App extends React.Component {
 
     }
 
+    handleChange(evt) {
+        this.setState({annotation: evt.target.value});
+    }
+
+    handleFormSubmit(evt) {
+        evt.preventDefault();
+        const data = {
+            'annotation': this.state.annotation,
+            'fragment': this.state.fragment,
+            'song_title': this.state.title,
+            'song_artist': this.state.artist,
+            'lyrics': this.state.lyrics,
+            'video_url': this.state.video
+        }
+        $.post('/save', data, (res) => {
+            console.log('saved');
+
+        }
+        );
+    }
+
     render() {
         let displayData = { display: 'none' };
         if (this.state.songDataLoaded) {
@@ -297,7 +319,7 @@ class App extends React.Component {
                         <div className="col">
 
                             <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
-                            <form action="/save" method="POST">
+                            <form onSubmit={this.handleFormSubmit}>
                                 <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div className="modal-dialog" role="document">
                                         <div className="modal-content">
@@ -313,7 +335,7 @@ class App extends React.Component {
                                                     {this.state.fragment}
                                                 </div>
                                                 <label for="annotation">Annotation</label>
-                                                <textarea className="form-control" name="annotation"></textarea><br />
+                                                <textarea className="form-control" name="annotation" value={this.state.value} onChange={this.handleChange}></textarea><br />
 
                                                 <input type="hidden" name="fragment" value={this.state.fragment} />
                                                 <input type="hidden" name="song_title" value={this.state.title} />
