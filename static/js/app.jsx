@@ -61,6 +61,19 @@ function AnnotatedSongs(props) {
     
 }
 
+function UserAnnotations(props) {
+    return (    
+        <div style={props.styling}>
+            <b>Name:</b> {props.userName}<br /><br />
+            <b>Email:</b> {props.userEmail}<br /><br />
+            <b>Your Annotations:</b>
+                <table className="table table-striped table-bordered">
+                    {props.userAnnos}
+                </table>
+        </div>
+    )
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -298,6 +311,8 @@ class App extends React.Component {
                                     {this.state.userAnnos}
                                 </table>
                             </div>
+                            <UserAnnotations styling={displayUserAnnos} userName={this.state.userName} userEmail={this.state.userEmail} userAnnos={this.state.userAnnos} />
+
                             <div style={displaySuggestions}>
                                 <StaffSuggestions onClick={this.handleClick} />
                             </div>
