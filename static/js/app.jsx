@@ -48,6 +48,19 @@ function Lyrics(props) {
     )
 }
 
+function AnnotatedSongs(props) {
+    let songs = props.data
+    if (songs.length != 0) {
+        songs = props.data.map((song) => {
+            return (
+            <li><a onClick={props.onClick} href="#">{song.song_artist} - {song.song_title}</a></li>
+            )
+            });
+        }
+    return (<ul style={props.styling}>{songs}</ul>)
+    
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -65,7 +78,7 @@ class App extends React.Component {
             songSuggestions: true,
             hits: "",
             searchHits: false,
-            annoSongs: "",
+            annoSongs: [],
             annoSongsLoaded: false,
             userAnnos: "",
             userAnnosLoaded: false,
@@ -114,13 +127,9 @@ class App extends React.Component {
         // this.setState({showLoadingGif: true});
 
         $.get('/annosongs.json', (res) => {
-            let songs = [];
-            for (const song of res) {
-                songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
-            };
-
+            console.log('testing .get', res);
             this.setState({
-                            annoSongs: songs,
+                            annoSongs: res,
                             annoSongsLoaded: true,
                             // showLoadingGif: false,
                             songSuggestions: false,
@@ -279,7 +288,7 @@ class App extends React.Component {
                     <div className="row">
                         <div className="col-6">
                             <ul style={displayHits}>{this.state.hits}</ul>
-                            <ul style={displayAnnoSongs}>{this.state.annoSongs}</ul>
+                            <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} onClick={this.handleClick} />
 
                             <div style={displayUserAnnos}>
                                 <b>Name:</b> {this.state.userName}<br /><br />
