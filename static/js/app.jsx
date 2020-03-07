@@ -27,18 +27,20 @@ function Search(props) {
 
 function StaffSuggestions(props) {
     return (
-        <ul>
-            <br />
-            <b>Staff picks:</b>
-            <li><a onClick={props.onClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
-            <li><a onClick={props.onClick} href="#">Beyoncé - Run the World (Girls)</a></li>
-            <li><a onClick={props.onClick} href="#">Halsey - Graveyard</a></li>
-            <li><a onClick={props.onClick} href="#">Paramore - The Only Exception</a></li>
-            <li><a onClick={props.onClick} href="#">Selena - Dreaming of You</a></li>
-            <li><a onClick={props.onClick} href="#">SHAED - Trampoline</a></li>
-            <li><a onClick={props.onClick} href="#">Sia - Chandelier</a></li>
-            <li><a onClick={props.onClick} href="#">Tierra Whack - Hungry Hippo</a></li>
-        </ul>
+        <div style={props.styling}>
+            <ul>
+                <br />
+                <b>Staff picks:</b>
+                <li><a onClick={props.onClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
+                <li><a onClick={props.onClick} href="#">Beyoncé - Run the World (Girls)</a></li>
+                <li><a onClick={props.onClick} href="#">Halsey - Graveyard</a></li>
+                <li><a onClick={props.onClick} href="#">Paramore - The Only Exception</a></li>
+                <li><a onClick={props.onClick} href="#">Selena - Dreaming of You</a></li>
+                <li><a onClick={props.onClick} href="#">SHAED - Trampoline</a></li>
+                <li><a onClick={props.onClick} href="#">Sia - Chandelier</a></li>
+                <li><a onClick={props.onClick} href="#">Tierra Whack - Hungry Hippo</a></li>
+            </ul>
+        </div>
     )
 }
 
@@ -62,14 +64,44 @@ function AnnotatedSongs(props) {
 }
 
 function UserAnnotations(props) {
-    return (    
+    console.log("props.userData", props.userData);
+    let userName = "";
+    let userEmail = "";
+    let userAnnoList = "";
+    let userAnnoListMapped = "";
+    if (Object.keys(props.userData).length != 0) {
+        userName = props.userData.user_name;
+        userEmail = props.userData.user_email;
+        userAnnoList = props.userData.anno_list;
+        if (userAnnoList.length != 0) {
+            userAnnoListMapped = userAnnoList.map((anno) => {
+                return (
+                    <tr><td><a onClick={props.handleClick} href="#">{anno.song_artist} - {anno.song_title}</a></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>
+                )
+            }
+            )
+        }
+    }
+    return (
         <div style={props.styling}>
-            <b>Name:</b> {props.userName}<br /><br />
-            <b>Email:</b> {props.userEmail}<br /><br />
-            <b>Your Annotations:</b>
-                <table className="table table-striped table-bordered">
-                    {props.userAnnos}
-                </table>
+        <b>Name:</b> {userName}<br /><br />
+        <b>Email:</b> {userEmail}<br /><br />
+        <b>Your Annotations:</b>
+            <table className="table table-striped table-bordered">
+                <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th></tr>
+                {userAnnoList && userAnnoListMapped}
+            </table>
+        </div>
+    )
+}
+
+function LoadingGif(props) {
+    return (
+        <div className="loading-gif" style={props.styling}>
+            <div>
+                <img id="catGif" src="/static/img/nyancat.gif" />
+            </div>
+            <span>Loading...</span>
         </div>
     )
 }
@@ -93,10 +125,8 @@ class App extends React.Component {
             searchHits: false,
             annoSongs: [],
             annoSongsLoaded: false,
-            userAnnos: "",
-            userAnnosLoaded: false,
-            userName: "",
-            userEmail: ""
+            userDataLoaded: false,
+            userData: {}
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -129,7 +159,7 @@ class App extends React.Component {
                             searchHits : true,
                             songDataLoaded: false,
                             annoSongsLoaded: false,
-                            userAnnosLoaded: false,
+                            userDataLoaded: false,
                             video: ""
                             });
         });
@@ -148,7 +178,7 @@ class App extends React.Component {
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
-                            userAnnosLoaded: false,
+                            userDataLoaded: false,
                             video: ""
                             });
         });
@@ -156,26 +186,16 @@ class App extends React.Component {
 
     handleUserAnnos(evt) {
         evt.preventDefault();
-        // this.setState({showLoadingGif: true});
 
         $.get('/user-annos.json', (res) => {
-            let annos = [];
-            annos.push(<tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th></tr>);
-            for (const anno of res.anno_list) {
-                annos.push(<tr><td><a onClick={this.handleClick} href="#">{anno.song_artist} - {anno.song_title}</a></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>);
-            };
-
             this.setState({
-                            userName: res.user_name,
-                            userEmail: res.user_email,
-                            userAnnos: annos,
-                            userAnnosLoaded: true,
-                            // showLoadingGif: false,
+                            userData: res,
+                            userDataLoaded: true,
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
                             annoSongsLoaded: false,
-                            video: ""
+                            video: "",
                             });
 
         });
@@ -212,7 +232,7 @@ class App extends React.Component {
                 songSuggestions: false,
                 searchHits: false ,
                 annoSongsLoaded: false,
-                userAnnosLoaded: false
+                userDataLoaded: false
             });
         });
     }
@@ -270,7 +290,7 @@ class App extends React.Component {
             displayAnnoSongs = null;
         };
         let displayUserAnnos = {display: 'none'};
-        if (this.state.userAnnosLoaded) {
+        if (this.state.userDataLoaded) {
             displayUserAnnos = null;
         };
 
@@ -282,19 +302,7 @@ class App extends React.Component {
                     <div className="row">
                         <div className="col">
                             <Search onSubmit={this.handleSubmit}/>
-
-                            <div
-                                className="loading-gif"
-                                style={(
-                                    this.state.showLoadingGif ?
-                                    {visibility: 'visible'} :
-                                    {visibility: 'hidden'}
-                                )}>
-                                <div>
-                                    <img id="catGif" src="/static/img/nyancat.gif" />
-                                </div>
-                                <span>Loading...</span>
-                            </div>
+                            <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
                         </div>
                     </div>
 
@@ -302,21 +310,8 @@ class App extends React.Component {
                         <div className="col-6">
                             <ul style={displayHits}>{this.state.hits}</ul>
                             <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} onClick={this.handleClick} />
-
-                            <div style={displayUserAnnos}>
-                                <b>Name:</b> {this.state.userName}<br /><br />
-                                <b>Email:</b> {this.state.userEmail}<br /><br />
-                                <b>Your Annotations:</b>
-                                <table className="table table-striped table-bordered">
-                                    {this.state.userAnnos}
-                                </table>
-                            </div>
-                            <UserAnnotations styling={displayUserAnnos} userName={this.state.userName} userEmail={this.state.userEmail} userAnnos={this.state.userAnnos} />
-
-                            <div style={displaySuggestions}>
-                                <StaffSuggestions onClick={this.handleClick} />
-                            </div>
-                            
+                            <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} />
+                            <StaffSuggestions styling={displaySuggestions} onClick={this.handleClick} />
                         </div>
                     </div>
 
