@@ -106,23 +106,21 @@ function LoadingGif(props) {
     )
 }
 
-class Annotations extends React.Component {
-    render() {
-        let annotationsList = this.props.annotationsList;
-        if (annotationsList.length) {
-            annotationsList = annotationsList.map((anno) => {
-                return (
-                <tr><td>{anno.song_fragment}</td><td>{anno.annotation}</td><td>{anno['user.name']}</td></tr>
-                )
-            })
-        }
-        return (
-            <table id="q_annotations" style={this.props.styling} className="table table-striped table-bordered">
-                <tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>
-                {annotationsList}
-            </table>
-        )
+function Annotations(props) {
+    let annotationsList = props.annotationsList;
+    if (annotationsList.length) {
+        annotationsList = annotationsList.map((anno) => {
+            return (
+            <tr><td>{anno.song_fragment}</td><td>{anno.annotation}</td><td>{anno['user.name']}</td></tr>
+            )
+        })
     }
+    return (
+        <table id="q_annotations" style={props.styling} className="table table-striped table-bordered">
+            <tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>
+            {annotationsList}
+        </table>
+    )
 }
 
 class App extends React.Component {
@@ -153,7 +151,7 @@ class App extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
         this.handleUserAnnos = this.handleUserAnnos.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        // this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
 
     }
@@ -261,22 +259,23 @@ class App extends React.Component {
         this.setState({annotation: evt.target.value});
     }
 
-    handleFormSubmit(evt) {
-        evt.preventDefault();
-        const data = {
-            'annotation': this.state.annotation,
-            'fragment': this.state.fragment,
-            'song_title': this.state.title,
-            'song_artist': this.state.artist,
-            'lyrics': this.state.lyrics,
-            'video_url': this.state.video
-        }
-        $.post('/save', data, (res) => {
-            console.log('saved');
+    // TODO: post request input
+    // handleFormSubmit(evt) {
+    //     evt.preventDefault();
+    //     const data = {
+    //         'annotation': this.state.annotation,
+    //         'fragment': this.state.fragment,
+    //         'song_title': this.state.title,
+    //         'song_artist': this.state.artist,
+    //         'lyrics': this.state.lyrics,
+    //         'video_url': this.state.video
+    //     }
+    //     $.post('/save', data, (res) => {
+    //         console.log('saved', res);
 
-        }
-        );
-    }
+    //     }
+    //     );
+    // }
 
     render() {
         let displayData = { display: 'none' };
@@ -350,7 +349,7 @@ class App extends React.Component {
                         <div className="col">
 
                             <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
-                            <form onSubmit={this.handleFormSubmit}>
+                            <form action="/save" method="POST">
                                 <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div className="modal-dialog" role="document">
                                         <div className="modal-content">
