@@ -106,6 +106,25 @@ function LoadingGif(props) {
     )
 }
 
+class Annotations extends React.Component {
+    render() {
+        let annotationsList = this.props.annotationsList;
+        if (annotationsList.length) {
+            annotationsList = annotationsList.map((anno) => {
+                return (
+                <tr><td>{anno.song_fragment}</td><td>{anno.annotation}</td><td>{anno['user.name']}</td></tr>
+                )
+            })
+        }
+        return (
+            <table id="q_annotations" style={this.props.styling} className="table table-striped table-bordered">
+                <tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>
+                {annotationsList}
+            </table>
+        )
+    }
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -119,14 +138,14 @@ class App extends React.Component {
             annotation: "",
             showLoadingGif: false,
             songAnnotations: false,
-            annotations: "",
             songSuggestions: true,
             hits: "",
             searchHits: false,
             annoSongs: [],
             annoSongsLoaded: false,
             userDataLoaded: false,
-            userData: {}
+            userData: {},
+            annotationsList: []
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -208,16 +227,9 @@ class App extends React.Component {
 
         $.get(`/api/search?q=${q}`, (res) => {
             if (res.song_annos.length) {
+                let annotationsList = res.song_annos
                 this.setState({ songAnnotations: true });
-                let annotations = "<tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>";
-                for (const song_anno of res.song_annos) {
-                    annotations+=`<tr id="${song_anno['anno_id']}"></tr>`
-                    annotations+=`<td>${song_anno['song_fragment']}</td>`
-                    annotations+=`<td>${song_anno['annotation']}</td>`
-                    annotations+=`<td>${song_anno['user.name']}</td>`
-                    annotations+="</tr>"
-                };
-                this.setState({ annotations: annotations });
+                this.setState({ annotationsList: annotationsList });
             } else {
                 this.setState({ songAnnotations: false });
             };
@@ -370,8 +382,7 @@ class App extends React.Component {
                                     </div>
                                 </div>
                             </form>
-                            <table id="q_annotations" style={displayAnnos} className="table table-striped table-bordered" dangerouslySetInnerHTML={{__html: this.state.annotations}}>
-                            </table>
+                            <Annotations styling={displayAnnos} annotationsList={this.state.annotationsList} />
                         </div>
                     </div>
 
