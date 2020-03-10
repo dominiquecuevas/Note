@@ -276,7 +276,7 @@ class App extends React.Component {
             displayData = null;
         };
         let displayAnnos = { display: 'none' };
-        if (this.state.annotationsList) {
+        if (this.state.annotationsList.length) {
             displayAnnos = null;
         } else {
             displayAnnos = { display: 'none' };
