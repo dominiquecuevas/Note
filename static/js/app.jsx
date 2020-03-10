@@ -64,7 +64,6 @@ function AnnotatedSongs(props) {
 }
 
 function UserAnnotations(props) {
-    console.log("props.userData", props.userData);
     let userName = "";
     let userEmail = "";
     let userAnnoList = "";
@@ -135,7 +134,6 @@ class App extends React.Component {
             fragment: "",
             annotation: "",
             showLoadingGif: false,
-            songAnnotations: false,
             songSuggestions: true,
             hits: "",
             searchHits: false,
@@ -166,7 +164,6 @@ class App extends React.Component {
         $.get(`/api/search/hits?${q}`, (res) => {
             let songs = [];
             for (const song of res.songs) {
-                console.log(song['song_artist']);
                 songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
             };
             this.setState({
@@ -184,14 +181,11 @@ class App extends React.Component {
 
     handleAnnoSongs(evt) {
         evt.preventDefault();
-        // this.setState({showLoadingGif: true});
 
         $.get('/annosongs.json', (res) => {
-            console.log('testing .get', res);
             this.setState({
                             annoSongs: res,
                             annoSongsLoaded: true,
-                            // showLoadingGif: false,
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
@@ -225,11 +219,11 @@ class App extends React.Component {
 
         $.get(`/api/search?q=${q}`, (res) => {
             if (res.song_annos.length) {
-                let annotationsList = res.song_annos
-                this.setState({ songAnnotations: true });
+                let annotationsList = res.song_annos;
+                console.log('handleClick > res.song_annos', res.song_annos);
                 this.setState({ annotationsList: annotationsList });
             } else {
-                this.setState({ songAnnotations: false });
+                this.setState({annotationsList: []})
             };
 
             this.setState({
@@ -259,17 +253,9 @@ class App extends React.Component {
         this.setState({annotation: evt.target.value});
     }
 
-    // TODO: post request input
    async handleFormSubmit(evt) {
         evt.preventDefault();
-        const data = {
-            'annotation': this.state.annotation,
-            'fragment': this.state.fragment,
-            'song_title': this.state.title,
-            'song_artist': this.state.artist,
-            'lyrics': this.state.lyrics,
-            'video_url': this.state.video
-        };
+
         const formData = new FormData(document.getElementById('save'));
 
         await fetch('/save', {method: 'POST', body: formData})
@@ -290,7 +276,7 @@ class App extends React.Component {
             displayData = null;
         };
         let displayAnnos = { display: 'none' };
-        if (this.state.songAnnotations) {
+        if (this.state.annotationsList) {
             displayAnnos = null;
         } else {
             displayAnnos = { display: 'none' };
