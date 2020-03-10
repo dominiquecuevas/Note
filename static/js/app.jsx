@@ -253,8 +253,10 @@ class App extends React.Component {
         this.setState({annotation: evt.target.value});
     }
 
-   async handleFormSubmit(evt) {
+    async handleFormSubmit(evt) {
         evt.preventDefault();
+
+        $('#modal').modal('hide');
 
         const formData = new FormData(document.getElementById('save'));
 
@@ -268,8 +270,8 @@ class App extends React.Component {
             })
             .then(console.log('set new annotationsList state!:', this.state.annotationsList))
             ;
+        $("textarea").val("");
 
-        $('#modal').modal('hide');
     }
 
     render() {
@@ -360,7 +362,7 @@ class App extends React.Component {
                                                     {this.state.fragment}
                                                 </div>
                                                 <label for="annotation">Annotation</label>
-                                                <textarea className="form-control" name="annotation" value={this.state.value} onChange={this.handleChange}></textarea><br />
+                                                <textarea className="form-control" name="annotation" onChange={this.handleChange}></textarea><br />
 
                                                 <input type="hidden" name="fragment" value={this.state.fragment} />
                                                 <input type="hidden" name="song_title" value={this.state.title} />
