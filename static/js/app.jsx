@@ -268,6 +268,8 @@ class App extends React.Component {
             })
             .then(console.log('set new annotationsList state!:', this.state.annotationsList))
             ;
+
+        $('#modal').modal('hide');
     }
 
     render() {
