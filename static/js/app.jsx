@@ -257,6 +257,7 @@ class App extends React.Component {
         evt.preventDefault();
 
         $('#modal').modal('hide');
+        this.setState({showLoadingGif: true});
 
         const formData = new FormData(document.getElementById('save'));
 
@@ -271,6 +272,9 @@ class App extends React.Component {
             .then(console.log('set new annotationsList state!:', this.state.annotationsList))
             ;
         $("textarea").val("");
+
+        this.setState({showLoadingGif: false});
+
 
     }
 
