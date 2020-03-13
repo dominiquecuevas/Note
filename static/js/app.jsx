@@ -81,7 +81,12 @@ function UserAnnotations(props) {
         if (userAnnoList.length != 0) {
             userAnnoListMapped = userAnnoList.map((anno) => {
                 return (
-                    <tr><td><SongLink handleClick={props.handleClick} song_artist={anno.song_artist} song_title={anno.song_title} /></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>
+                    <tr>
+                        <td><SongLink handleClick={props.handleClick} song_artist={anno.song_artist} song_title={anno.song_title} /></td>
+                        <td>{anno.song_fragment}</td>
+                        <td>{anno.annotation}</td>
+                        <td><a href="" data-anno_id={anno.anno_id} onClick={props.handleDeleteAnnotation}>delete annotation</a></td>
+                    </tr>
                 )
             }
             )
@@ -93,7 +98,7 @@ function UserAnnotations(props) {
         <b>Email:</b> {userEmail}<br /><br />
         <b>Your Annotations:</b>
             <table className="table table-striped table-bordered">
-                <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th></tr>
+                <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th><th>Delete</th></tr>
                 {userAnnoList && userAnnoListMapped}
             </table>
         </div>
@@ -163,6 +168,7 @@ class App extends React.Component {
         this.handleUserAnnos = this.handleUserAnnos.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleDeleteAnnotation = this.handleDeleteAnnotation.bind(this);
 
     }
 
@@ -292,6 +298,25 @@ class App extends React.Component {
 
     }
 
+    async handleDeleteAnnotation(evt) {
+        // TODO: make it a modal for confirmation
+        evt.preventDefault();
+
+        const anno_id = $(evt.target).data('anno_id');
+        console.log('data-anno_id', anno_id);
+
+        await fetch(`/user-annos-delete/${anno_id}`, 
+            {method: 'DELETE'});
+
+        this.handleUserAnnos(evt);
+
+        await fetch('/annosongs.json')
+            .then(res => res.json())
+            .then(res => {
+                this.setState({annoSongs: res})
+            })
+    }
+
     render() {
         let displayData = { display: 'none' };
         if (this.state.songDataLoaded) {
@@ -336,7 +361,7 @@ class App extends React.Component {
                         <div className="col-6">
                             <ul style={displayHits}>{this.state.hits}</ul>
                             <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} handleClick={this.handleClick} />
-                            <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} />
+                            <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} handleDeleteAnnotation={this.handleDeleteAnnotation} />
                             <StaffSuggestions styling={displaySuggestions} handleClick={this.handleClick} />
                         </div>
                     </div>

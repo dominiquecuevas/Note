@@ -98,7 +98,7 @@ def api_search():
 def songs():
 
     allsongs = []
-    songs = db.session.query(Song.song_title, Song.song_artist).all()
+    songs = db.session.query(Song.song_title, Song.song_artist).join(Annotation).all()
     if songs:
         for song_tuple in songs:
             allsongs.append({
@@ -180,6 +180,7 @@ def user_annos_json():
     anno_list = []
     for annotation in annotations:
         anno_list.append({
+                        'anno_id': annotation.anno_id,
                         'song_artist': annotation.song.song_artist,
                         'song_title': annotation.song.song_title,
                         'song_fragment':annotation.song_fragment,
@@ -188,6 +189,13 @@ def user_annos_json():
     return jsonify({'user_name': user.name,
                     'user_email': user.email,
                     'anno_list': anno_list})
+
+@app.route("/user-annos-delete/<anno_id>", methods=['DELETE'])
+def user_annos_delete(anno_id):
+    annotation = Annotation.query.get(anno_id)
+    print(anno_id, annotation)
+    db.session.delete(annotation)
+    db.session.commit()
 
 if __name__ == "__main__":
     connect_db(app)
