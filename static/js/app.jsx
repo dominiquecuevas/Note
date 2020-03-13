@@ -227,16 +227,9 @@ class App extends React.Component {
 
     handleClick(evt) {
         evt.preventDefault();
-        const q = $(evt.target).html();
         const song_artist = $(evt.target).data('song_artist');
         const song_title = $(evt.target).data('song_title');
-        // console.log('song_artist & song_title:', song_artist, song_title);
         this.setState({showLoadingGif: true});
-        const data = {'song_artist': song_artist, 'song_title': song_title};
-        
-        // fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
-        //     .then(res => res.json())
-        //     .then(res => {console.log("res.song_title, res.song_artist", res.song_title, res.song_artist)});
 
         $.get(`/api/search?song_artist=${song_artist}&song_title=${song_title}`, (res) => {
             if (res.song_annos.length) {
@@ -251,7 +244,7 @@ class App extends React.Component {
                 title: res.song_title, 
                 artist: res.song_artist,
                 lyrics: res.lyrics,
-                video: `https://www.youtube.com/embed/${res.video_url}?autoplay=0`,
+                video: res.video_url,
                 songDataLoaded: true,
                 showLoadingGif: false,
                 songSuggestions: false,
@@ -285,7 +278,7 @@ class App extends React.Component {
         await fetch('/save', {method: 'POST', body: formData})
             .then(console.log('saved!'));
 
-        await fetch(`/api/search?q=${this.state.artist} - ${this.state.title}`)
+        await fetch(`/api/search?song_artist=${this.state.artist}&song_title=${this.state.title}`)
             .then(res => res.json())
             .then(res => {
                 this.setState({annotationsList: res.song_annos});
@@ -370,7 +363,7 @@ class App extends React.Component {
                         
                         <div className="col">
 
-                            <iframe src={this.state.video} type="text/html" frameBorder="0" width="640" height="360"></iframe>
+                            <iframe src={`https://www.youtube.com/embed/${this.state.video}?autoplay=0`} type="text/html" frameBorder="0" width="640" height="360"></iframe>
                             <form onSubmit={this.handleFormSubmit} id="save">
                                 <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div className="modal-dialog" role="document">
