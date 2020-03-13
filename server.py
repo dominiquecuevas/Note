@@ -41,9 +41,37 @@ def api_hits():
 @app.route("/api/search")
 def api_search():
 
-    search = request.args.get('q')
+    # search = request.args.get('q')
+    song_artist = request.args.get('song_artist')
+    song_title = request.args.get('song_title')
+
+    # query to check if artist/title is already in database
+    q_song = db.session.query(Song).filter(Song.song_artist==song_artist, Song.song_title==song_title).first()
+
+    if q_song:
+        print(q_song.song_id, q_song.song_title)
+        print(q_song.annotations)
+        print(q_song.video_url)
+        song_annos = []
+        for annotation in q_song.annotations:
+            song_annos.append({'anno_id': annotation.anno_id, 
+                                'song_fragment': annotation.song_fragment,
+                                'annotation': annotation.annotation, 
+                                'user.name': annotation.user.name
+                                })
+
+        results = {
+                    'song_title': q_song.song_title,
+                    'song_artist': q_song.song_artist,
+                    'lyrics': q_song.lyrics,
+                    'video_url': q_song.video_url,
+                    'song_annos': song_annos
+        }
+        return jsonify(results)
+
+
     # a dictionary of api data
-    search_dict = genius.search(search)
+    search_dict = genius.search(f'{song_artist} {song_title}')
 
     # query for annotations of searched songs already in database
     q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, 

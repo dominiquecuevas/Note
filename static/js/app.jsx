@@ -26,19 +26,25 @@ function Search(props) {
 }
 
 function StaffSuggestions(props) {
+    const staffPicks = [{'song_artist': 'Adele', 'song_title': 'Send My Love (To Your New Lover)'},
+                        {'song_artist': 'Beyoncé', 'song_title': 'Run the World (Girls)'},
+                        {'song_artist': 'Halsey', 'song_title': 'Graveyard'}, 
+                        {'song_artist': 'Paramore', 'song_title': 'The Only Exception'}, 
+                        {'song_artist': 'Selena', 'song_title': 'Dreaming of You'}, 
+                        {'song_artist': 'SHAED', 'song_title': 'Trampoline'}, 
+                        {'song_artist': 'Sia', 'song_title': 'Chandelier'}, 
+                        {'song_artist': 'Tierra Whack', 'song_title': 'Hungry Hippo'}, 
+                        ]
     return (
         <div style={props.styling}>
             <ul>
                 <br />
                 <b>Staff picks:</b>
-                <li><a onClick={props.onClick} href="#">Adele - Send My Love (To Your New Lover)</a></li>
-                <li><a onClick={props.onClick} href="#">Beyoncé - Run the World (Girls)</a></li>
-                <li><a onClick={props.onClick} href="#">Halsey - Graveyard</a></li>
-                <li><a onClick={props.onClick} href="#">Paramore - The Only Exception</a></li>
-                <li><a onClick={props.onClick} href="#">Selena - Dreaming of You</a></li>
-                <li><a onClick={props.onClick} href="#">SHAED - Trampoline</a></li>
-                <li><a onClick={props.onClick} href="#">Sia - Chandelier</a></li>
-                <li><a onClick={props.onClick} href="#">Tierra Whack - Hungry Hippo</a></li>
+                {staffPicks.map((song) => {
+                    return (<li><SongLink handleClick={props.handleClick} song_artist={song.song_artist} song_title={song.song_title} /></li>)
+                    })
+                }
+
             </ul>
         </div>
     )
@@ -55,7 +61,7 @@ function AnnotatedSongs(props) {
     if (songs.length != 0) {
         songs = props.data.map((song) => {
             return (
-            <li><a onClick={props.onClick} href="#">{song.song_artist} - {song.song_title}</a></li>
+            <li><SongLink handleClick={props.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>
             )
             });
         }
@@ -75,7 +81,7 @@ function UserAnnotations(props) {
         if (userAnnoList.length != 0) {
             userAnnoListMapped = userAnnoList.map((anno) => {
                 return (
-                    <tr><td><a onClick={props.handleClick} href="#">{anno.song_artist} - {anno.song_title}</a></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>
+                    <tr><td><SongLink handleClick={props.handleClick} song_artist={anno.song_artist} song_title={anno.song_title} /></td><td>{anno.song_fragment}</td><td>{anno.annotation}</td></tr>
                 )
             }
             )
@@ -122,6 +128,12 @@ function Annotations(props) {
     )
 }
 
+function SongLink(props) {
+    return (
+        <a onClick={props.handleClick} href="#" data-song_artist={props.song_artist} data-song_title={props.song_title}>{props.song_artist} - {props.song_title}</a>
+    )
+}
+
 class App extends React.Component {
     constructor() {
         super();
@@ -164,7 +176,8 @@ class App extends React.Component {
         $.get(`/api/search/hits?${q}`, (res) => {
             let songs = [];
             for (const song of res.songs) {
-                songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
+                // songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
+                songs.push(<li><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
             };
             this.setState({
                             hits: songs,
@@ -215,9 +228,17 @@ class App extends React.Component {
     handleClick(evt) {
         evt.preventDefault();
         const q = $(evt.target).html();
+        const song_artist = $(evt.target).data('song_artist');
+        const song_title = $(evt.target).data('song_title');
+        // console.log('song_artist & song_title:', song_artist, song_title);
         this.setState({showLoadingGif: true});
+        const data = {'song_artist': song_artist, 'song_title': song_title};
+        
+        // fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
+        //     .then(res => res.json())
+        //     .then(res => {console.log("res.song_title, res.song_artist", res.song_title, res.song_artist)});
 
-        $.get(`/api/search?q=${q}`, (res) => {
+        $.get(`/api/search?song_artist=${song_artist}&song_title=${song_title}`, (res) => {
             if (res.song_annos.length) {
                 let annotationsList = res.song_annos;
                 console.log('handleClick > res.song_annos', res.song_annos);
@@ -321,9 +342,9 @@ class App extends React.Component {
                     <div className="row">
                         <div className="col-6">
                             <ul style={displayHits}>{this.state.hits}</ul>
-                            <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} onClick={this.handleClick} />
+                            <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} handleClick={this.handleClick} />
                             <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} />
-                            <StaffSuggestions styling={displaySuggestions} onClick={this.handleClick} />
+                            <StaffSuggestions styling={displaySuggestions} handleClick={this.handleClick} />
                         </div>
                     </div>
 
