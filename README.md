@@ -1,4 +1,4 @@
-# ♫ Note
+# ![](/static/img/musicnote.gif) ♫ Note
 
 Full stack web app enables users to search song lyrics to highlight and annotate sections for their meaning.
 
