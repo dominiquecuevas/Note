@@ -1,55 +1,3 @@
-function NavBar(props) {
-    return (
-        <nav id="nav" className="navbar sticky-top navbar-light bg-light justify-content-start">
-        <div id="note"><a className="navbar-brand" href="/"><span id="logo">♫</span> <b>Note</b>
-            <br />
-            <span id="slogan">Lyrics Annotator</span>
-            </a>
-        </div> | 
-        <a className="nav-link" onClick={props.handleAnnoSongs} href="/annosongs">Annotated Songs</a> |
-        <a className="nav-link" onClick={props.handleUserAnnos} href="/user-annos">Account</a>
-    </nav>
-    )
-}
-
-function Search(props) {
-    return (
-        <form
-        id="search"
-        onSubmit={props.onSubmit}
-        className="d-flex"
-    >
-        <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song, or Lyrics" />
-        <input type="submit" className="btn btn-primary" value="Search" />
-    </form>
-    )
-}
-
-function StaffSuggestions(props) {
-    const staffPicks = [{'song_artist': 'Adele', 'song_title': 'Send My Love (To Your New Lover)'},
-                        {'song_artist': 'Beyoncé', 'song_title': 'Run the World (Girls)'},
-                        {'song_artist': 'Halsey', 'song_title': 'Graveyard'}, 
-                        {'song_artist': 'Paramore', 'song_title': 'The Only Exception'}, 
-                        {'song_artist': 'Selena', 'song_title': 'Dreaming of You'}, 
-                        {'song_artist': 'SHAED', 'song_title': 'Trampoline'}, 
-                        {'song_artist': 'Sia', 'song_title': 'Chandelier'}, 
-                        {'song_artist': 'Tierra Whack', 'song_title': 'Hungry Hippo'}, 
-                        ]
-    return (
-        <div style={props.styling}>
-            <ul>
-                <br />
-                <b>Staff picks:</b>
-                {staffPicks.map((song) => {
-                    return (<li><SongLink handleClick={props.handleClick} song_artist={song.song_artist} song_title={song.song_title} /></li>)
-                    })
-                }
-
-            </ul>
-        </div>
-    )
-}
-
 function Lyrics(props) {
     return (
         <div id="lyrics" dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}></div>
@@ -362,7 +310,7 @@ class App extends React.Component {
                             <ul style={displayHits}>{this.state.hits}</ul>
                             <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} handleClick={this.handleClick} />
                             <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} handleDeleteAnnotation={this.handleDeleteAnnotation} />
-                            <StaffSuggestions styling={displaySuggestions} handleClick={this.handleClick} />
+                            <LandingPage styling={displaySuggestions} handleClick={this.handleClick} />
                         </div>
                     </div>
 
