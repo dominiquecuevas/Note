@@ -1,55 +1,13 @@
+const Router = window.ReactRouterDOM.BrowserRouter;
+const Route =  window.ReactRouterDOM.Route;
+const Link =  window.ReactRouterDOM.Link;
+const Prompt =  window.ReactRouterDOM.Prompt;
+const Switch = window.ReactRouterDOM.Switch;
+const Redirect = window.ReactRouterDOM.Redirect;
+
 function Lyrics(props) {
     return (
         <div id="lyrics" dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}></div>
-    )
-}
-
-function AnnotatedSongs(props) {
-    let songs = props.data
-    if (songs.length != 0) {
-        songs = props.data.map((song) => {
-            return (
-            <li><SongLink handleClick={props.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>
-            )
-            });
-        }
-    return (<ul style={props.styling}>{songs}</ul>)
-    
-}
-
-function UserAnnotations(props) {
-    let userName = "";
-    let userEmail = "";
-    let userAnnoList = "";
-    let userAnnoListMapped = "";
-    if (Object.keys(props.userData).length != 0) {
-        userName = props.userData.user_name;
-        userEmail = props.userData.user_email;
-        userAnnoList = props.userData.anno_list;
-        if (userAnnoList.length != 0) {
-            userAnnoListMapped = userAnnoList.map((anno) => {
-                return (
-                    <tr>
-                        <td><SongLink handleClick={props.handleClick} song_artist={anno.song_artist} song_title={anno.song_title} /></td>
-                        <td>{anno.song_fragment}</td>
-                        <td>{anno.annotation}</td>
-                        <td><a href="" data-anno_id={anno.anno_id} onClick={props.handleDeleteAnnotation}>delete annotation</a></td>
-                    </tr>
-                )
-            }
-            )
-        }
-    }
-    return (
-        <div style={props.styling}>
-        <b>Name:</b> {userName}<br /><br />
-        <b>Email:</b> {userEmail}<br /><br />
-        <b>Your Annotations:</b>
-            <table className="table table-striped table-bordered">
-                <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th><th>Delete</th></tr>
-                {userAnnoList && userAnnoListMapped}
-            </table>
-        </div>
     )
 }
 
@@ -307,10 +265,16 @@ class App extends React.Component {
 
                     <div className="row">
                         <div className="col-6">
-                            <ul style={displayHits}>{this.state.hits}</ul>
-                            <AnnotatedSongs styling={displayAnnoSongs} data={this.state.annoSongs} handleClick={this.handleClick} />
-                            <UserAnnotations styling={displayUserAnnos} userData={this.state.userData} handleClick={this.handleClick} handleDeleteAnnotation={this.handleDeleteAnnotation} />
-                            <LandingPage styling={displaySuggestions} handleClick={this.handleClick} />
+                            <SearchResultsPage styling={displayHits} 
+                                                results={this.state.hits} />
+                            <AnnotatedSongsPage styling={displayAnnoSongs} 
+                                                data={this.state.annoSongs} 
+                                                handleClick={this.handleClick} />
+                            <AccountPage styling={displayUserAnnos} 
+                                            userData={this.state.userData} handleClick={this.handleClick} 
+                                            handleDeleteAnnotation={this.handleDeleteAnnotation} />
+                            <LandingPage styling={displaySuggestions} 
+                                        handleClick={this.handleClick} />
                         </div>
                     </div>
 
