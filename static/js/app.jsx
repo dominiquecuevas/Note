@@ -1,9 +1,9 @@
-const Router = window.ReactRouterDOM.BrowserRouter;
-const Route =  window.ReactRouterDOM.Route;
-const Link =  window.ReactRouterDOM.Link;
-const Prompt =  window.ReactRouterDOM.Prompt;
-const Switch = window.ReactRouterDOM.Switch;
-const Redirect = window.ReactRouterDOM.Redirect;
+const Router = ReactRouterDOM.BrowserRouter;
+const Route =  ReactRouterDOM.Route;
+const Link =  ReactRouterDOM.Link;
+const Prompt =  ReactRouterDOM.Prompt;
+const Switch = ReactRouterDOM.Switch;
+const Redirect = ReactRouterDOM.Redirect;
 
 function Lyrics(props) {
     return (
