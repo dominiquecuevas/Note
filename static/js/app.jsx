@@ -80,6 +80,25 @@ class App extends React.Component {
 
     }
 
+    async fetchAnnotations() {
+        fetch('/annosongs.json')
+            .then((res) => res.json())
+            .then((data) => {
+                this.setState({annoSongs: data})
+            });
+    }
+
+    componentDidMount() {
+        this.fetchAnnotations();
+    }
+
+    // TODO: may need to have componentDidUpdate when new annotations are made
+    // componentDidUpdate(prevState) {
+    //     if (this.annoSongs != prevState.annoSongs) {
+    //         this.fetchAnnotations();
+    //     }
+    // }
+
     handleSubmit(evt) {
         evt.preventDefault();
         const q = $(evt.target).serialize();
@@ -106,6 +125,7 @@ class App extends React.Component {
         });
     }
 
+    
     // handleAnnoSongs(evt) {
     //     evt.preventDefault();
 
