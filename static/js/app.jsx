@@ -4,6 +4,8 @@ const Link =  ReactRouterDOM.Link;
 const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
+const useState = React.useState
+const useEffect = React.useEffect
 
 function Lyrics(props) {
     return (
@@ -57,11 +59,11 @@ class App extends React.Component {
             fragment: "",
             annotation: "",
             showLoadingGif: false,
-            songSuggestions: true,
+            // songSuggestions: true,
             hits: "",
             searchHits: false,
             annoSongs: [],
-            annoSongsLoaded: false,
+            // annoSongsLoaded: false,
             userDataLoaded: false,
             userData: {},
             annotationsList: []
@@ -70,7 +72,7 @@ class App extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelection = this.handleSelection.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
+        // this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
         this.handleUserAnnos = this.handleUserAnnos.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -94,31 +96,31 @@ class App extends React.Component {
             this.setState({
                             hits: songs,
                             showLoadingGif: false,
-                            songSuggestions: false,
+                            // songSuggestions: false,
                             searchHits : true,
                             songDataLoaded: false,
-                            annoSongsLoaded: false,
+                            // annoSongsLoaded: false,
                             userDataLoaded: false,
                             video: ""
                             });
         });
     }
 
-    handleAnnoSongs(evt) {
-        evt.preventDefault();
+    // handleAnnoSongs(evt) {
+    //     evt.preventDefault();
 
-        $.get('/annosongs.json', (res) => {
-            this.setState({
-                            annoSongs: res,
-                            annoSongsLoaded: true,
-                            songSuggestions: false,
-                            searchHits : false,
-                            songDataLoaded: false,
-                            userDataLoaded: false,
-                            video: ""
-                            });
-        });
-    }
+    //     $.get('/annosongs.json', (res) => {
+    //         this.setState({
+    //                         annoSongs: res,
+    //                         // annoSongsLoaded: true,
+    //                         // songSuggestions: false,
+    //                         searchHits : false,
+    //                         songDataLoaded: false,
+    //                         userDataLoaded: false,
+    //                         video: ""
+    //                         });
+    //     });
+    // }
 
     handleUserAnnos(evt) {
         evt.preventDefault();
@@ -130,7 +132,7 @@ class App extends React.Component {
                             songSuggestions: false,
                             searchHits : false,
                             songDataLoaded: false,
-                            annoSongsLoaded: false,
+                            // annoSongsLoaded: false,
                             video: "",
                             });
 
@@ -159,9 +161,9 @@ class App extends React.Component {
                 video: res.video_url,
                 songDataLoaded: true,
                 showLoadingGif: false,
-                songSuggestions: false,
+                // songSuggestions: false,
                 searchHits: false ,
-                annoSongsLoaded: false,
+                // annoSongsLoaded: false,
                 userDataLoaded: false
             });
         });
@@ -234,47 +236,52 @@ class App extends React.Component {
         } else {
             displayAnnos = { display: 'none' };
         };
-        let displaySuggestions = null;
-        if (!this.state.songSuggestions) {
-            displaySuggestions = { display: 'none' };
-        };
+        // let displaySuggestions = null;
+        // if (!this.state.songSuggestions) {
+        //     displaySuggestions = { display: 'none' };
+        // };
         let displayHits = {display: 'none'};
         if (this.state.searchHits) {
             displayHits = null;
         };
-        let displayAnnoSongs = {display: 'none'};
-        if (this.state.annoSongsLoaded) {
-            displayAnnoSongs = null;
-        };
+        // let displayAnnoSongs = {display: 'none'};
+        // if (this.state.annoSongsLoaded) {
+        //     displayAnnoSongs = null;
+        // };
         let displayUserAnnos = {display: 'none'};
         if (this.state.userDataLoaded) {
             displayUserAnnos = null;
         };
 
         return (
-            <div>
-                <NavBar handleAnnoSongs={this.handleAnnoSongs} handleUserAnnos={this.handleUserAnnos} />
+            <Router>
+                <NavBar handleUserAnnos={this.handleUserAnnos} />
                 <br />
                 <div className="container-fluid">
+                    
                     <div className="row">
                         <div className="col">
                             <Search onSubmit={this.handleSubmit}/>
                             <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
                         </div>
                     </div>
-
+                <Switch>
                     <div className="row">
                         <div className="col-6">
+                            <Route exact path="/">
+                                <LandingPage handleClick={this.handleClick} />
+                            </Route>
                             <SearchResultsPage styling={displayHits} 
                                                 results={this.state.hits} />
-                            <AnnotatedSongsPage styling={displayAnnoSongs} 
-                                                data={this.state.annoSongs} 
+                            <Route exact path="/annosongs">
+                                <AnnotatedSongsPage data={this.state.annoSongs} 
                                                 handleClick={this.handleClick} />
+                            </Route>
+                            
                             <AccountPage styling={displayUserAnnos} 
                                             userData={this.state.userData} handleClick={this.handleClick} 
                                             handleDeleteAnnotation={this.handleDeleteAnnotation} />
-                            <LandingPage styling={displaySuggestions} 
-                                        handleClick={this.handleClick} />
+                            
                         </div>
                     </div>
 
@@ -336,9 +343,9 @@ class App extends React.Component {
                             <Annotations styling={displayAnnos} annotationsList={this.state.annotationsList} />
                         </div>
                     </div>
-
+                </Switch>
                 </div>
-            </div>
+            </Router>
         );
     }
 }
