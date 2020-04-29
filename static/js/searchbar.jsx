@@ -6,7 +6,9 @@ function Search(props) {
         className="d-flex"
     >
         <input type="text" className="form-control mr-3" name="q" placeholder="Artist, Song, or Lyrics" />
-        <input type="submit" className="btn btn-primary" value="Search" />
+        {/* <Link to="/search-results"> */}
+            <input type="submit" className="btn btn-primary" value="Search" />
+        {/* </Link> */}
     </form>
     )
 }

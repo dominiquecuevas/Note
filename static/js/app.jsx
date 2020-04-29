@@ -108,19 +108,23 @@ class App extends React.Component {
     //     }
     // }
 
-    handleSubmit(evt) {
+    async handleSubmit(evt) {
         evt.preventDefault();
+        console.log('in handleSubmit');
         const q = $(evt.target).serialize();
         this.setState({
                         showLoadingGif: true
                      });
 
-        $.get(`/api/search/hits?${q}`, (res) => {
+        await fetch(`/api/search/hits?${q}`)
+            .then(res => res.json())
+            .then((data) => {
             let songs = [];
-            for (const song of res.songs) {
+            for (const song of data.songs) {
                 // songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
                 songs.push(<li><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
             };
+            console.log('hits:', songs);
             this.setState({
                             hits: songs,
                             showLoadingGif: false,
@@ -131,7 +135,7 @@ class App extends React.Component {
                             // userDataLoaded: false,
                             video: ""
                             });
-        });
+            });
     }
 
     
@@ -191,7 +195,7 @@ class App extends React.Component {
                 songDataLoaded: true,
                 showLoadingGif: false,
                 // songSuggestions: false,
-                searchHits: false ,
+                // searchHits: false ,
                 // annoSongsLoaded: false,
                 // userDataLoaded: false
             });
@@ -270,10 +274,10 @@ class App extends React.Component {
         // if (!this.state.songSuggestions) {
         //     displaySuggestions = { display: 'none' };
         // };
-        let displayHits = {display: 'none'};
-        if (this.state.searchHits) {
-            displayHits = null;
-        };
+        // let displayHits = {display: 'none'};
+        // if (this.state.searchHits) {
+        //     displayHits = null;
+        // };
         // let displayAnnoSongs = {display: 'none'};
         // if (this.state.annoSongsLoaded) {
         //     displayAnnoSongs = null;
@@ -282,7 +286,6 @@ class App extends React.Component {
         // if (this.state.userDataLoaded) {
         //     displayUserAnnos = null;
         // };
-
         return (
             <Router>
                 <NavBar />
@@ -301,8 +304,11 @@ class App extends React.Component {
                             <Route exact path="/">
                                 <LandingPage handleClick={this.handleClick} />
                             </Route>
-                            <SearchResultsPage styling={displayHits} 
-                                                results={this.state.hits} />
+                            {(this.state.searchHits) && <Redirect to="/search-results" />}
+                            <Route exact path="/search-results">
+                                <SearchResultsPage results={this.state.hits} />
+                            </Route>
+                            
                             <Route exact path="/annosongs">
                                 <AnnotatedSongsPage data={this.state.annoSongs} 
                                                 handleClick={this.handleClick} />
