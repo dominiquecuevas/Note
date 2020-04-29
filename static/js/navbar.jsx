@@ -6,9 +6,8 @@ function NavBar(props) {
             <span id="slogan">Lyrics Annotator</span>
             </a>
         </div> | 
-        {/* <a className="nav-link" onClick={props.handleAnnoSongs} href="/annosongs">Annotated Songs</a> | */}
         <Link className="nav-link" to="/annosongs">Annotated Songs</Link> |
-        <a className="nav-link" onClick={props.handleUserAnnos} href="/user-annos">Account</a>
+        <Link className="nav-link" to="/user-annos">Account</Link>
     </nav>
     )
 }

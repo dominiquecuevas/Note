@@ -64,7 +64,7 @@ class App extends React.Component {
             searchHits: false,
             annoSongs: [],
             // annoSongsLoaded: false,
-            userDataLoaded: false,
+            // userDataLoaded: false,
             userData: {},
             annotationsList: []
         };
@@ -73,7 +73,7 @@ class App extends React.Component {
         this.handleSelection = this.handleSelection.bind(this);
         this.handleClick = this.handleClick.bind(this);
         // this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
-        this.handleUserAnnos = this.handleUserAnnos.bind(this);
+        // this.handleUserAnnos = this.handleUserAnnos.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDeleteAnnotation = this.handleDeleteAnnotation.bind(this);
@@ -88,8 +88,17 @@ class App extends React.Component {
             });
     }
 
+    async fetchUserData() {
+        fetch('/user-annos.json')
+            .then(res => res.json())
+            .then(data => {
+                this.setState({userData: data})
+            });
+    }
+
     componentDidMount() {
         this.fetchAnnotations();
+        this.fetchUserData();
     }
 
     // TODO: may need to have componentDidUpdate when new annotations are made
@@ -119,7 +128,7 @@ class App extends React.Component {
                             searchHits : true,
                             songDataLoaded: false,
                             // annoSongsLoaded: false,
-                            userDataLoaded: false,
+                            // userDataLoaded: false,
                             video: ""
                             });
         });
@@ -142,22 +151,22 @@ class App extends React.Component {
     //     });
     // }
 
-    handleUserAnnos(evt) {
-        evt.preventDefault();
+    // handleUserAnnos(evt) {
+    //     evt.preventDefault();
 
-        $.get('/user-annos.json', (res) => {
-            this.setState({
-                            userData: res,
-                            userDataLoaded: true,
-                            songSuggestions: false,
-                            searchHits : false,
-                            songDataLoaded: false,
-                            // annoSongsLoaded: false,
-                            video: "",
-                            });
+    //     $.get('/user-annos.json', (res) => {
+    //         this.setState({
+    //                         userData: res,
+    //                         userDataLoaded: true,
+    //                         songSuggestions: false,
+    //                         searchHits : false,
+    //                         songDataLoaded: false,
+    //                         // annoSongsLoaded: false,
+    //                         video: "",
+    //                         });
 
-        });
-    }
+    //     });
+    // }
 
     handleClick(evt) {
         evt.preventDefault();
@@ -184,7 +193,7 @@ class App extends React.Component {
                 // songSuggestions: false,
                 searchHits: false ,
                 // annoSongsLoaded: false,
-                userDataLoaded: false
+                // userDataLoaded: false
             });
         });
     }
@@ -236,7 +245,8 @@ class App extends React.Component {
         await fetch(`/user-annos-delete/${anno_id}`, 
             {method: 'DELETE'});
 
-        this.handleUserAnnos(evt);
+        // this.handleUserAnnos(evt);
+        this.fetchUserData();
 
         await fetch('/annosongs.json')
             .then(res => res.json())
@@ -268,14 +278,14 @@ class App extends React.Component {
         // if (this.state.annoSongsLoaded) {
         //     displayAnnoSongs = null;
         // };
-        let displayUserAnnos = {display: 'none'};
-        if (this.state.userDataLoaded) {
-            displayUserAnnos = null;
-        };
+        // let displayUserAnnos = {display: 'none'};
+        // if (this.state.userDataLoaded) {
+        //     displayUserAnnos = null;
+        // };
 
         return (
             <Router>
-                <NavBar handleUserAnnos={this.handleUserAnnos} />
+                <NavBar />
                 <br />
                 <div className="container-fluid">
                     
@@ -297,10 +307,12 @@ class App extends React.Component {
                                 <AnnotatedSongsPage data={this.state.annoSongs} 
                                                 handleClick={this.handleClick} />
                             </Route>
+                            <Route exact path="/user-annos">
+                                <AccountPage userData={this.state.userData} 
+                                             handleClick={this.handleClick} 
+                                             handleDeleteAnnotation={this.handleDeleteAnnotation} />
+                            </Route>
                             
-                            <AccountPage styling={displayUserAnnos} 
-                                            userData={this.state.userData} handleClick={this.handleClick} 
-                                            handleDeleteAnnotation={this.handleDeleteAnnotation} />
                             
                         </div>
                     </div>
