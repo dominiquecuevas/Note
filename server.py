@@ -98,12 +98,12 @@ def api_search():
 def songs():
 
     allsongs = []
-    songs = db.session.query(Song.song_title, Song.song_artist).join(Annotation).all()
+    songs = db.session.query(Song).join(Annotation).all()
     if songs:
-        for song_tuple in songs:
+        for song in songs:
             allsongs.append({
-                                'song_title': song_tuple[0],
-                                'song_artist': song_tuple[1]
+                                'song_title': song.song_title,
+                                'song_artist': song.song_artist
                                 })
 
     return jsonify(allsongs)
