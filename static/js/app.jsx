@@ -7,12 +7,6 @@ const Redirect = ReactRouterDOM.Redirect;
 const useState = React.useState
 const useEffect = React.useEffect
 
-function Lyrics(props) {
-    return (
-        <div id="lyrics" dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}></div>
-    )
-}
-
 function LoadingGif(props) {
     return (
         <div className="loading-gif" style={props.styling}>
@@ -24,29 +18,6 @@ function LoadingGif(props) {
     )
 }
 
-function Annotations(props) {
-    let annotationsList = props.annotationsList;
-    if (annotationsList.length) {
-        annotationsList = annotationsList.map((anno) => {
-            return (
-            <tr><td>{anno.song_fragment}</td><td>{anno.annotation}</td><td>{anno['user.name']}</td></tr>
-            )
-        })
-    }
-    return (
-        <table id="q_annotations" style={props.styling} className="table table-striped table-bordered">
-            <tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>
-            {annotationsList}
-        </table>
-    )
-}
-
-function SongLink(props) {
-    return (
-        <a onClick={props.handleClick} href="#" data-song_artist={props.song_artist} data-song_title={props.song_title}>{props.song_artist} - {props.song_title}</a>
-    )
-}
-
 class App extends React.Component {
     constructor() {
         super();
@@ -55,16 +26,12 @@ class App extends React.Component {
             artist: "",
             lyrics: "",
             video: "",
-            songDataLoaded: false,
             fragment: "",
             annotation: "",
             showLoadingGif: false,
-            // songSuggestions: true,
             hits: "",
             searchHits: false,
             annoSongs: [],
-            // annoSongsLoaded: false,
-            // userDataLoaded: false,
             userData: {},
             annotationsList: []
         };
@@ -72,8 +39,6 @@ class App extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelection = this.handleSelection.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        // this.handleAnnoSongs = this.handleAnnoSongs.bind(this);
-        // this.handleUserAnnos = this.handleUserAnnos.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDeleteAnnotation = this.handleDeleteAnnotation.bind(this);
@@ -101,16 +66,8 @@ class App extends React.Component {
         this.fetchUserData();
     }
 
-    // TODO: may need to have componentDidUpdate when new annotations are made
-    // componentDidUpdate(prevState) {
-    //     if (this.annoSongs != prevState.annoSongs) {
-    //         this.fetchAnnotations();
-    //     }
-    // }
-
     async handleSubmit(evt) {
         evt.preventDefault();
-        console.log('in handleSubmit');
         const q = $(evt.target).serialize();
         this.setState({
                         showLoadingGif: true
@@ -121,83 +78,38 @@ class App extends React.Component {
             .then((data) => {
             let songs = [];
             for (const song of data.songs) {
-                // songs.push(<li><a onClick={this.handleClick} href="#">{song['song_artist']} - {song['song_title']}</a></li>)
                 songs.push(<li><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
             };
-            console.log('hits:', songs);
             this.setState({
                             hits: songs,
                             showLoadingGif: false,
-                            // songSuggestions: false,
                             searchHits : true,
-                            songDataLoaded: false,
-                            // annoSongsLoaded: false,
-                            // userDataLoaded: false,
                             video: ""
                             });
             });
     }
 
-    
-    // handleAnnoSongs(evt) {
-    //     evt.preventDefault();
-
-    //     $.get('/annosongs.json', (res) => {
-    //         this.setState({
-    //                         annoSongs: res,
-    //                         // annoSongsLoaded: true,
-    //                         // songSuggestions: false,
-    //                         searchHits : false,
-    //                         songDataLoaded: false,
-    //                         userDataLoaded: false,
-    //                         video: ""
-    //                         });
-    //     });
-    // }
-
-    // handleUserAnnos(evt) {
-    //     evt.preventDefault();
-
-    //     $.get('/user-annos.json', (res) => {
-    //         this.setState({
-    //                         userData: res,
-    //                         userDataLoaded: true,
-    //                         songSuggestions: false,
-    //                         searchHits : false,
-    //                         songDataLoaded: false,
-    //                         // annoSongsLoaded: false,
-    //                         video: "",
-    //                         });
-
-    //     });
-    // }
-
     handleClick(evt) {
-        evt.preventDefault();
         const song_artist = $(evt.target).data('song_artist');
         const song_title = $(evt.target).data('song_title');
         this.setState({showLoadingGif: true});
 
-        $.get(`/api/search?song_artist=${song_artist}&song_title=${song_title}`, (res) => {
-            if (res.song_annos.length) {
-                let annotationsList = res.song_annos;
-                console.log('handleClick > res.song_annos', res.song_annos);
+        fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
+        .then(res => res.json())
+        .then((data) => {
+            if (data.song_annos.length) {
+                let annotationsList = data.song_annos;
                 this.setState({ annotationsList: annotationsList });
             } else {
                 this.setState({annotationsList: []})
             };
 
             this.setState({
-                title: res.song_title, 
-                artist: res.song_artist,
-                lyrics: res.lyrics,
-                video: res.video_url,
-                songDataLoaded: true,
+                title: data.song_title, 
+                artist: data.song_artist,
+                lyrics: data.lyrics,
+                video: data.video_url,
                 showLoadingGif: false,
-                // songSuggestions: false,
-                // searchHits: false ,
-                // annoSongsLoaded: false,
-                // userDataLoaded: false
             });
         });
     }
@@ -232,9 +144,11 @@ class App extends React.Component {
             })
             .then(console.log('set new annotationsList state!:', this.state.annotationsList))
             ;
-        $("textarea").val("");
+        this.setState({fragment: "", annotation: ""});
 
         this.setState({showLoadingGif: false});
+        await this.fetchAnnotations();
+        await this.fetchUserData();
 
 
     }
@@ -244,48 +158,15 @@ class App extends React.Component {
         evt.preventDefault();
 
         const anno_id = $(evt.target).data('anno_id');
-        console.log('data-anno_id', anno_id);
 
         await fetch(`/user-annos-delete/${anno_id}`, 
             {method: 'DELETE'});
 
-        // this.handleUserAnnos(evt);
-        this.fetchUserData();
-
-        await fetch('/annosongs.json')
-            .then(res => res.json())
-            .then(res => {
-                this.setState({annoSongs: res})
-            })
+        await this.fetchUserData();
+        await this.fetchAnnotations();
     }
-
-    render() {
-        let displayData = { display: 'none' };
-        if (this.state.songDataLoaded) {
-            displayData = null;
-        };
-        let displayAnnos = { display: 'none' };
-        if (this.state.annotationsList.length) {
-            displayAnnos = null;
-        } else {
-            displayAnnos = { display: 'none' };
-        };
-        // let displaySuggestions = null;
-        // if (!this.state.songSuggestions) {
-        //     displaySuggestions = { display: 'none' };
-        // };
-        // let displayHits = {display: 'none'};
-        // if (this.state.searchHits) {
-        //     displayHits = null;
-        // };
-        // let displayAnnoSongs = {display: 'none'};
-        // if (this.state.annoSongsLoaded) {
-        //     displayAnnoSongs = null;
-        // };
-        // let displayUserAnnos = {display: 'none'};
-        // if (this.state.userDataLoaded) {
-        //     displayUserAnnos = null;
-        // };
+    // TODO: fix containers
+    render() {        
         return (
             <Router>
                 <NavBar />
@@ -318,69 +199,21 @@ class App extends React.Component {
                                              handleClick={this.handleClick} 
                                              handleDeleteAnnotation={this.handleDeleteAnnotation} />
                             </Route>
-                            
-                            
                         </div>
                     </div>
+                            <Route path="/song-data/:artist/:title" render={(props) => <SongData artist={this.state.artist} 
+                                                                                        title={this.state.title}
+                                                                                        lyrics={this.state.lyrics}
+                                                                                        video={this.state.video}
+                                                                                        fragment={this.state.fragment}
+                                                                                        annotation={this.state.annotation}
+                                                                                        annotationsList={this.state.annotationsList}
+                                                                                        handleSelection={this.handleSelection}
+                                                                                        handleChange={this.handleChange}
+                                                                                        handleFormSubmit={this.handleFormSubmit}
+                                                                                        {...props}/>} />
 
-                    <div className="row" id="song-data" style={displayData}>
 
-                        <div className="table container-t col-5">
-                            <div className="table-row header">
-                                <h2>{this.state.title}</h2>
-                                <h3>{this.state.artist}</h3>
-                                <p>
-                                    <button onClick={this.handleSelection} id="get-fragment" className="btn btn-primary" data-toggle="modal" data-target="#modal">Highlight lyrics to annotate and click me!</button>
-                                </p>
-                            </div>
-
-                            <div className="table-row body">
-                                <div className="body-content-wrapper">
-                                    <div className="body-content">
-                                        <Lyrics dangerouslySetInnerHTML={{__html: this.state.lyrics}} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="col">
-
-                            <iframe src={`https://www.youtube.com/embed/${this.state.video}?autoplay=0`} type="text/html" frameBorder="0" width="640" height="360"></iframe>
-                            <form onSubmit={this.handleFormSubmit} id="save">
-                                <div className="form-group modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div className="modal-dialog" role="document">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title" id="exampleModalLabel">Input Annotation</h5>
-                                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div className="modal-body">
-                                                <label for="fragment">Fragment</label>
-                                                <div className="form-control" id="fragment">
-                                                    {this.state.fragment}
-                                                </div>
-                                                <label for="annotation">Annotation</label>
-                                                <textarea className="form-control" name="annotation" onChange={this.handleChange}></textarea><br />
-
-                                                <input type="hidden" name="fragment" value={this.state.fragment} />
-                                                <input type="hidden" name="song_title" value={this.state.title} />
-                                                <input type="hidden" name="song_artist" value={this.state.artist} />
-                                                <input type="hidden" name="lyrics" value={this.state.lyrics} />
-                                                <input type="hidden" name="video_url" value={this.state.video} />
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <input type="submit" className="btn btn-primary" value="Save" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <Annotations styling={displayAnnos} annotationsList={this.state.annotationsList} />
-                        </div>
-                    </div>
                 </Switch>
                 </div>
             </Router>
