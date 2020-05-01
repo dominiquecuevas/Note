@@ -1,5 +1,4 @@
 function Annotations(props) {
-    console.log('in Annotations');
     let annotationsList = props.annotationsList;
     if (annotationsList.length) {
         annotationsList = annotationsList.map((anno) => {

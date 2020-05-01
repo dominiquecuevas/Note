@@ -10,7 +10,7 @@ function AccountPage(props) {
         if (userAnnoList.length != 0) {
             userAnnoListMapped = userAnnoList.map((anno) => {
                 return (
-                    <tr>
+                    <tr key={anno.anno_id}>
                         <td><SongLink handleClick={props.handleClick} song_artist={anno.song_artist} song_title={anno.song_title} /></td>
                         <td>{anno.song_fragment}</td>
                         <td>{anno.annotation}</td>
@@ -28,8 +28,17 @@ function AccountPage(props) {
                 <b>Email:</b> {userEmail}<br /><br />
                 <b>Your Annotations:</b>
                     <table className="table table-striped table-bordered">
-                        <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th><th>Delete</th></tr>
-                        {userAnnoList && userAnnoListMapped}
+                        <thead>
+                            <tr>
+                                <th>Song</th>
+                                <th>Lyrics Fragment</th>
+                                <th>Annotation</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userAnnoList && userAnnoListMapped}
+                        </tbody>
                     </table>
             </div>
         </div>

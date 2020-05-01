@@ -14,7 +14,7 @@ function StaffSuggestions(props) {
                 <br />
                 <b>Staff picks:</b>
                 {staffPicks.map((song) => {
-                    return (<li><SongLink handleClick={props.handleClick} song_artist={song.song_artist} song_title={song.song_title} /></li>)
+                    return (<li key={song.song_title}><SongLink handleClick={props.handleClick} song_artist={song.song_artist} song_title={song.song_title} /></li>)
                     })
                 }
 

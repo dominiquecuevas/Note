@@ -70,7 +70,8 @@ class App extends React.Component {
         evt.preventDefault();
         const q = $(evt.target).serialize();
         this.setState({
-                        showLoadingGif: true
+                        showLoadingGif: true,
+                        searchHits: false,
                      });
 
         await fetch(`/api/search/hits?${q}`)
@@ -78,7 +79,7 @@ class App extends React.Component {
             .then((data) => {
             let songs = [];
             for (const song of data.songs) {
-                songs.push(<li><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
+                songs.push(<li key={song['song_title']}><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
             };
             this.setState({
                             hits: songs,
@@ -90,7 +91,6 @@ class App extends React.Component {
     }
 
     async handleClick(evt) {
-        console.log('in handleClick');
         const song_artist = $(evt.target).data('song_artist');
         const song_title = $(evt.target).data('song_title');
         this.setState({showLoadingGif: true});
@@ -98,8 +98,6 @@ class App extends React.Component {
         await fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
         .then(res => res.json())
         .then((data) => {
-            console.log('in handleClick fetch');
-            console.log('data:', data)
             if (data.song_annos.length) {
                 let annotationsList = data.song_annos;
                 this.setState({ annotationsList: annotationsList });
@@ -114,7 +112,6 @@ class App extends React.Component {
                 video: data.video_url,
                 showLoadingGif: false,
             });
-            console.log('title:', data.song_title);
         });
     }
 
@@ -169,7 +166,7 @@ class App extends React.Component {
         await this.fetchUserData();
         await this.fetchAnnotations();
     }
-    render() {        
+    render() {
         return (
             <Router>
                 <NavBar />
@@ -182,11 +179,11 @@ class App extends React.Component {
                             <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
                         </div>
                     </div>
+                    {this.state.searchHits && <Redirect to="/search-results" />}
                     <Switch>
                         <Route exact path="/">
                             <LandingPage handleClick={this.handleClick} />
                         </Route>
-                        {(this.state.searchHits) && <Redirect to="/search-results" />}
                         <Route exact path="/search-results">
                             <SearchResultsPage results={this.state.hits} />
                         </Route>
