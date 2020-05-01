@@ -1,4 +1,5 @@
 function SongData(props) {
+    console.log('in SongData');
     
     return (
         <div className="row" id="song-data">

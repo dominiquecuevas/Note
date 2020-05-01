@@ -22,14 +22,16 @@ function AccountPage(props) {
         }
     }
     return (
-        <div style={props.styling}>
-        <b>Name:</b> {userName}<br /><br />
-        <b>Email:</b> {userEmail}<br /><br />
-        <b>Your Annotations:</b>
-            <table className="table table-striped table-bordered">
-                <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th><th>Delete</th></tr>
-                {userAnnoList && userAnnoListMapped}
-            </table>
+        <div className="row">
+            <div className="col-6">
+                <b>Name:</b> {userName}<br /><br />
+                <b>Email:</b> {userEmail}<br /><br />
+                <b>Your Annotations:</b>
+                    <table className="table table-striped table-bordered">
+                        <tr><th>Song</th><th>Lyrics Fragment</th><th>Annotation</th><th>Delete</th></tr>
+                        {userAnnoList && userAnnoListMapped}
+                    </table>
+            </div>
         </div>
     )
 }
