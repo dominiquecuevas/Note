@@ -5,7 +5,7 @@ import os
 GENIUS_TOKEN = os.environ.get('TOKEN')
 GENIUS_URL = "https://api.genius.com/"
 
-def search(q):
+def get_lyrics(q):
     payload = {'access_token' : GENIUS_TOKEN,
                 'q': q}
     url = GENIUS_URL + "search"
