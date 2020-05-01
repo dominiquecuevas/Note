@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, session, jso
 import requests
 from jinja2 import StrictUndefined
 from model import connect_db, db, Song, User, Annotation, seed_data
-import genius
+import webscrape
 import genius_hits
 
 from bs4 import BeautifulSoup
@@ -28,30 +28,24 @@ def homepage():
 
     return render_template("reacthits.html")
 
-@app.route("/api/search/hits")
-def api_hits():
-
+@app.route("/search")
+def search_hits():
+    '''Returns search results for a query'''
     search = request.args.get('q')
-    # a dictionary of api data
     search_dict = genius_hits.search(search)
 
     return jsonify(search_dict)
     
 
-@app.route("/api/search")
-def api_search():
-
-    # search = request.args.get('q')
+@app.route("/song-data")
+def song_data():
+    '''Get the song data for a selected song'''
     song_artist = request.args.get('song_artist')
     song_title = request.args.get('song_title')
 
-    # query to check if artist/title is already in database
     q_song = db.session.query(Song).filter(Song.song_artist==song_artist, Song.song_title==song_title).first()
 
     if q_song:
-        print(q_song.song_id, q_song.song_title)
-        print(q_song.annotations)
-        print(q_song.video_url)
         song_annos = []
         for annotation in q_song.annotations:
             song_annos.append({'anno_id': annotation.anno_id, 
@@ -69,9 +63,8 @@ def api_search():
         }
         return jsonify(results)
 
-
-    # a dictionary of api data
-    search_dict = genius.search(f'{song_artist} {song_title}')
+    # perform scrape if song not in database
+    search_dict = webscrape.get_lyrics(f'{song_artist} {song_title}')
 
     # query for annotations of searched songs already in database
     q_annotations = db.session.query(Annotation.anno_id, Annotation.song_fragment, 
@@ -94,9 +87,9 @@ def api_search():
     return jsonify(search_dict)
 
 
-@app.route("/annosongs.json")
-def songs():
-
+@app.route("/annotated-songs")
+def annotated_songs():
+    '''Get list of annotated songs'''
     allsongs = []
     songs = db.session.query(Song).join(Annotation).all()
     if songs:
@@ -105,7 +98,6 @@ def songs():
                                 'song_title': song.song_title,
                                 'song_artist': song.song_artist
                                 })
-
     return jsonify(allsongs)
 
 
@@ -124,7 +116,6 @@ def user_session():
     db.session.add(new_user)
     db.session.commit()
 
-    # made session the user_id since the User object by itself cannot be sessioned
     session['current_user'] = new_user.user_id
     print(session['current_user'])
 
@@ -133,8 +124,7 @@ def user_session():
 
 @app.route("/save", methods=['POST'])
 def save():
-    """Testing get user input and save to database"""
-
+    '''Save a new annotation to database'''
     if not session.get('current_user'):
         flash('Please sign-in')
         return redirect('/user-reg')
@@ -149,10 +139,8 @@ def save():
     new_annotation = Annotation(annotation=annotation, 
                                 song_fragment=fragment)
 
-    # need to query song from db to not duplicate
     q_song = Song.query.filter(Song.song_title==song_title,
                                 Song.song_artist==song_artist).first()
-    print(q_song)
     if q_song:
         new_song = q_song
     else:
@@ -169,14 +157,11 @@ def save():
     db.session.add(new_annotation)
     db.session.commit()
 
-    # return redirect("/")
-
-@app.route("/user-annos.json")
-def user_annos_json():
-
+@app.route("/account")
+def account():
+    '''Get account information and annotations'''
     user = User.query.get(session['current_user'])
     annotations = user.annotations
-
     anno_list = []
     for annotation in annotations:
         anno_list.append({
@@ -190,7 +175,7 @@ def user_annos_json():
                     'user_email': user.email,
                     'anno_list': anno_list})
 
-@app.route("/user-annos-delete/<anno_id>", methods=['DELETE'])
+@app.route("/delete-annotation/<anno_id>", methods=['DELETE'])
 def user_annos_delete(anno_id):
     annotation = Annotation.query.get(anno_id)
     print(anno_id, annotation)

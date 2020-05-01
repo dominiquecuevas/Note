@@ -6,8 +6,8 @@ function NavBar() {
             <span id="slogan">Lyrics Annotator</span>
             </a>
         </div> | 
-        <Link className="nav-link" to="/annosongs">Annotated Songs</Link> |
-        <Link className="nav-link" to="/user-annos">Account</Link>
+        <Link className="nav-link" to="/annotated-songs">Annotated Songs</Link> |
+        <Link className="nav-link" to="/account">Account</Link>
     </nav>
     )
 }

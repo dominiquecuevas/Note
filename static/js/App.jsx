@@ -7,17 +7,6 @@ const Redirect = ReactRouterDOM.Redirect;
 const useState = React.useState
 const useEffect = React.useEffect
 
-function LoadingGif(props) {
-    return (
-        <div className="loading-gif" style={props.styling}>
-            <div>
-                <img id="catGif" src="/static/img/nyancat.gif" />
-            </div>
-            <span>Loading...</span>
-        </div>
-    )
-}
-
 class App extends React.Component {
     constructor() {
         super();
@@ -46,7 +35,7 @@ class App extends React.Component {
     }
 
     async fetchAnnotations() {
-        fetch('/annosongs.json')
+        fetch('/annotated-songs')
             .then((res) => res.json())
             .then((data) => {
                 this.setState({annoSongs: data})
@@ -54,7 +43,7 @@ class App extends React.Component {
     }
 
     async fetchUserData() {
-        fetch('/user-annos.json')
+        fetch('/account')
             .then(res => res.json())
             .then(data => {
                 this.setState({userData: data})
@@ -74,7 +63,7 @@ class App extends React.Component {
                         searchHits: false,
                      });
 
-        await fetch(`/api/search/hits?${q}`)
+        await fetch(`/search?${q}`)
             .then(res => res.json())
             .then((data) => {
             let songs = [];
@@ -95,7 +84,7 @@ class App extends React.Component {
         const song_title = $(evt.target).data('song_title');
         this.setState({showLoadingGif: true});
 
-        await fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
+        await fetch(`/song-data?song_artist=${song_artist}&song_title=${song_title}`)
         .then(res => res.json())
         .then((data) => {
             if (data.song_annos.length) {
@@ -138,7 +127,7 @@ class App extends React.Component {
         await fetch('/save', {method: 'POST', body: formData})
             .then(console.log('saved!'));
 
-        await fetch(`/api/search?song_artist=${this.state.artist}&song_title=${this.state.title}`)
+        await fetch(`/song-data?song_artist=${this.state.artist}&song_title=${this.state.title}`)
             .then(res => res.json())
             .then(res => {
                 this.setState({annotationsList: res.song_annos});
@@ -160,7 +149,7 @@ class App extends React.Component {
 
         const anno_id = $(evt.target).data('anno_id');
 
-        await fetch(`/user-annos-delete/${anno_id}`, 
+        await fetch(`/delete-annotation/${anno_id}`, 
             {method: 'DELETE'});
 
         await this.fetchUserData();
@@ -179,20 +168,20 @@ class App extends React.Component {
                             <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
                         </div>
                     </div>
-                    {this.state.searchHits && <Redirect to="/search-results" />}
+                    {this.state.searchHits && <Redirect to="/search" />}
                     <Switch>
                         <Route exact path="/">
                             <LandingPage handleClick={this.handleClick} />
                         </Route>
-                        <Route exact path="/search-results">
+                        <Route exact path="/search">
                             <SearchResultsPage results={this.state.hits} />
                         </Route>
                         
-                        <Route exact path="/annosongs">
+                        <Route exact path="/annotated-songs">
                             <AnnotatedSongsPage data={this.state.annoSongs} 
                                             handleClick={this.handleClick} />
                         </Route>
-                        <Route exact path="/user-annos">
+                        <Route exact path="/account">
                             <AccountPage userData={this.state.userData} 
                                             handleClick={this.handleClick} 
                                             handleDeleteAnnotation={this.handleDeleteAnnotation} />

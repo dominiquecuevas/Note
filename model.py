@@ -68,8 +68,8 @@ def seed_data():
     q = db.session.query
 
     # test creating rows with static data
-    panini = Song(song_title='Panini', song_artist='Lil Nas X', lyrics='Hey, Panini..', video_url='https://www.youtube.com/watch?v=bXcSLI58-h8')
-    sd = Song(song_title='Slow Dancing in the Dark', song_artist='Joji', lyrics="I don't want a friend..", video_url='https://www.youtube.com/watch?v=K3Qzzggn--s')
+    panini = Song(song_title='Panini', song_artist='Lil Nas X', lyrics='Hey, Panini..', video_url='bXcSLI58-h8')
+    sd = Song(song_title='Slow Dancing in the Dark', song_artist='Joji', lyrics="I don't want a friend..", video_url='K3Qzzggn--s')
     db.session.add(panini)
     db.session.add(sd)
     db.session.commit()
