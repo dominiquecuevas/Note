@@ -89,14 +89,17 @@ class App extends React.Component {
             });
     }
 
-    handleClick(evt) {
+    async handleClick(evt) {
+        console.log('in handleClick');
         const song_artist = $(evt.target).data('song_artist');
         const song_title = $(evt.target).data('song_title');
         this.setState({showLoadingGif: true});
 
-        fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
+        await fetch(`/api/search?song_artist=${song_artist}&song_title=${song_title}`)
         .then(res => res.json())
         .then((data) => {
+            console.log('in handleClick fetch');
+            console.log('data:', data)
             if (data.song_annos.length) {
                 let annotationsList = data.song_annos;
                 this.setState({ annotationsList: annotationsList });
@@ -111,6 +114,7 @@ class App extends React.Component {
                 video: data.video_url,
                 showLoadingGif: false,
             });
+            console.log('title:', data.song_title);
         });
     }
 
@@ -165,7 +169,6 @@ class App extends React.Component {
         await this.fetchUserData();
         await this.fetchAnnotations();
     }
-    // TODO: fix containers
     render() {        
         return (
             <Router>
@@ -179,42 +182,37 @@ class App extends React.Component {
                             <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
                         </div>
                     </div>
-                <Switch>
-                    <div className="row">
-                        <div className="col-6">
-                            <Route exact path="/">
-                                <LandingPage handleClick={this.handleClick} />
-                            </Route>
-                            {(this.state.searchHits) && <Redirect to="/search-results" />}
-                            <Route exact path="/search-results">
-                                <SearchResultsPage results={this.state.hits} />
-                            </Route>
-                            
-                            <Route exact path="/annosongs">
-                                <AnnotatedSongsPage data={this.state.annoSongs} 
-                                                handleClick={this.handleClick} />
-                            </Route>
-                            <Route exact path="/user-annos">
-                                <AccountPage userData={this.state.userData} 
-                                             handleClick={this.handleClick} 
-                                             handleDeleteAnnotation={this.handleDeleteAnnotation} />
-                            </Route>
-                        </div>
-                    </div>
-                            <Route path="/song-data/:artist/:title" render={(props) => <SongData artist={this.state.artist} 
-                                                                                        title={this.state.title}
-                                                                                        lyrics={this.state.lyrics}
-                                                                                        video={this.state.video}
-                                                                                        fragment={this.state.fragment}
-                                                                                        annotation={this.state.annotation}
-                                                                                        annotationsList={this.state.annotationsList}
-                                                                                        handleSelection={this.handleSelection}
-                                                                                        handleChange={this.handleChange}
-                                                                                        handleFormSubmit={this.handleFormSubmit}
-                                                                                        {...props}/>} />
+                    <Switch>
+                        <Route exact path="/">
+                            <LandingPage handleClick={this.handleClick} />
+                        </Route>
+                        {(this.state.searchHits) && <Redirect to="/search-results" />}
+                        <Route exact path="/search-results">
+                            <SearchResultsPage results={this.state.hits} />
+                        </Route>
+                        
+                        <Route exact path="/annosongs">
+                            <AnnotatedSongsPage data={this.state.annoSongs} 
+                                            handleClick={this.handleClick} />
+                        </Route>
+                        <Route exact path="/user-annos">
+                            <AccountPage userData={this.state.userData} 
+                                            handleClick={this.handleClick} 
+                                            handleDeleteAnnotation={this.handleDeleteAnnotation} />
+                        </Route>
 
-
-                </Switch>
+                        <Route path="/song-data/:artist/:title" render={(props) => <SongData artist={this.state.artist} 
+                                                                                    title={this.state.title}
+                                                                                    lyrics={this.state.lyrics}
+                                                                                    video={this.state.video}
+                                                                                    fragment={this.state.fragment}
+                                                                                    annotation={this.state.annotation}
+                                                                                    annotationsList={this.state.annotationsList}
+                                                                                    handleSelection={this.handleSelection}
+                                                                                    handleChange={this.handleChange}
+                                                                                    handleFormSubmit={this.handleFormSubmit}
+                                                                                    {...props}/>} />
+                    </Switch>
                 </div>
             </Router>
         );
