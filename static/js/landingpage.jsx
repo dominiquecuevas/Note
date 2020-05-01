@@ -25,6 +25,11 @@ function StaffSuggestions(props) {
 
 class LandingPage extends React.Component {
     render() {
-        return (<StaffSuggestions styling={this.props.styling} handleClick={this.props.handleClick} />)
+        return (
+            <div className="row">
+                <div className="col-6">
+                    <StaffSuggestions styling={this.props.styling} handleClick={this.props.handleClick} />
+                </div>
+            </div>)
     }
 }
