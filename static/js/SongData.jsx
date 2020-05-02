@@ -4,8 +4,8 @@ function SongData(props) {
 
             <div className="table container-t col-5">
                 <div className="table-row header">
-                    <h2>{props.title}</h2>
-                    <h3>{props.artist}</h3>
+                    <h2>Title: {props.title}</h2>
+                    <h3>Artist: {props.artist}</h3>
                     <p>
                         <button onClick={props.handleSelection} id="get-fragment" className="btn btn-primary" data-toggle="modal" data-target="#modal">Highlight lyrics to annotate and click me!</button>
                     </p>

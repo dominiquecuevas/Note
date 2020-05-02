@@ -23,7 +23,7 @@ function AccountPage(props) {
     }
     return (
         <div className="row">
-            <div className="col-6">
+            <div className="col-8">
                 <b>Name:</b> {userName}<br /><br />
                 <b>Email:</b> {userEmail}<br /><br />
                 <b>Your Annotations:</b>

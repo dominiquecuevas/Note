@@ -28,7 +28,7 @@ def homepage():
 
     return render_template("reacthits.html")
 
-@app.route("/search")
+@app.route("/api/search")
 def search_hits():
     '''Returns search results for a query'''
     search = request.args.get('q')
@@ -37,7 +37,7 @@ def search_hits():
     return jsonify(search_dict)
     
 
-@app.route("/song-data")
+@app.route("/api/song-data")
 def song_data():
     '''Get the song data for a selected song'''
     song_artist = request.args.get('song_artist')
@@ -87,7 +87,7 @@ def song_data():
     return jsonify(search_dict)
 
 
-@app.route("/annotated-songs")
+@app.route("/api/annotated-songs")
 def annotated_songs():
     '''Get list of annotated songs'''
     allsongs = []
@@ -95,6 +95,7 @@ def annotated_songs():
     if songs:
         for song in songs:
             allsongs.append({
+                                'song_id': song.song_id,
                                 'song_title': song.song_title,
                                 'song_artist': song.song_artist
                                 })
@@ -157,7 +158,7 @@ def save():
     db.session.add(new_annotation)
     db.session.commit()
 
-@app.route("/account")
+@app.route("/api/account")
 def account():
     '''Get account information and annotations'''
     user = User.query.get(session['current_user'])

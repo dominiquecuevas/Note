@@ -6,15 +6,6 @@ body {
   background: linear-gradient(to left top, #9c73ba, #ffdcce) fixed;
 }
 
-/*#nav {
-    background: linear-gradient(rgba(0, 0, 0, 0.4), transparent);
-}
-*/
-
-/*#nav {
-  background: linear-gradient(to right left, #ffdcce, #4e167d) fixed;
-}*/
-
 #note {line-height: 18px;
         text-align: center;}
 
@@ -28,9 +19,6 @@ a {color: MidnightBlue;}
 
 #nav {opacity: .7;}
 
-/*#login input {width: 500px;}
-*/
-
 body {font-family: Libre Franklin;}
 
 #catGif {
@@ -40,6 +28,14 @@ body {font-family: Libre Franklin;}
 
 #fragment {
         height: auto;
+}
+
+table { 
+    border: 1px solid black;
+    border-collapse: separate;
+    border-left: 0;
+    border-radius: 5px;
+    border-spacing: 0px;
 }
 
 .table {
@@ -54,13 +50,8 @@ body {font-family: Libre Franklin;}
     height: 540px;
 }
 
-.header {
-/*    background: cyan;
-*/}
-
 .body {
-/*    background: yellow;
-*/    height: 100%;
+    height: 100%;
 }
 
 .body-content-wrapper {
@@ -84,3 +75,46 @@ body {font-family: Libre Franklin;}
     justify-content: center;
     align-items: center;
 }
+
+input[type="text"] {
+    background-color: transparent;
+    border-color: black;
+}
+
+.btn {
+    color: rgb(25, 25, 112);
+    background-color: transparent;
+    border-color: black;
+}
+
+.btn:hover, .btn:focus {
+    color: grey;
+    background-color: transparent;
+    border-color: black;
+}
+
+/* width */
+::-webkit-scrollbar {
+    box-shadow: inset 0 0 2px black; 
+    width: 25px;
+    border-radius: 3px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px black; 
+    border-radius: 3px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+    box-shadow: inset 0 0 2px black; 
+    border-radius: 3px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background:rgba(255, 255, 255, 0.1); 
+  }
+

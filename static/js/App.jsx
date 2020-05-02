@@ -1,11 +1,8 @@
 const Router = ReactRouterDOM.BrowserRouter;
 const Route =  ReactRouterDOM.Route;
 const Link =  ReactRouterDOM.Link;
-const Prompt =  ReactRouterDOM.Prompt;
 const Switch = ReactRouterDOM.Switch;
 const Redirect = ReactRouterDOM.Redirect;
-const useState = React.useState
-const useEffect = React.useEffect
 
 class App extends React.Component {
     constructor() {
@@ -35,7 +32,7 @@ class App extends React.Component {
     }
 
     async fetchAnnotations() {
-        fetch('/annotated-songs')
+        fetch('/api/annotated-songs')
             .then((res) => res.json())
             .then((data) => {
                 this.setState({annoSongs: data})
@@ -43,7 +40,7 @@ class App extends React.Component {
     }
 
     async fetchUserData() {
-        fetch('/account')
+        fetch('/api/account')
             .then(res => res.json())
             .then(data => {
                 this.setState({userData: data})
@@ -63,7 +60,7 @@ class App extends React.Component {
                         searchHits: false,
                      });
 
-        await fetch(`/search?${q}`)
+        await fetch(`/api/search?${q}`)
             .then(res => res.json())
             .then((data) => {
             let songs = [];
@@ -84,7 +81,7 @@ class App extends React.Component {
         const song_title = $(evt.target).data('song_title');
         this.setState({showLoadingGif: true});
 
-        await fetch(`/song-data?song_artist=${song_artist}&song_title=${song_title}`)
+        await fetch(`/api/song-data?song_artist=${song_artist}&song_title=${song_title}`)
         .then(res => res.json())
         .then((data) => {
             if (data.song_annos.length) {
@@ -127,7 +124,7 @@ class App extends React.Component {
         await fetch('/save', {method: 'POST', body: formData})
             .then(console.log('saved!'));
 
-        await fetch(`/song-data?song_artist=${this.state.artist}&song_title=${this.state.title}`)
+        await fetch(`/api/song-data?song_artist=${this.state.artist}&song_title=${this.state.title}`)
             .then(res => res.json())
             .then(res => {
                 this.setState({annotationsList: res.song_annos});

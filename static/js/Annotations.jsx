@@ -8,9 +8,17 @@ function Annotations(props) {
         })
     }
     return (
-        <table id="q_annotations" style={props.styling} className="table table-striped table-bordered">
-            <tr><th>Lyrics Fragment</th><th>Annotation</th><th>Annotation by</th></tr>
-            {annotationsList}
+        <table id="q_annotations" className="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Lyrics Fragment</th>
+                    <th>Annotation</th>
+                    <th>Annotation by</th>
+                </tr>
+            </thead>
+            <tbody>
+                {annotationsList}
+            </tbody>
         </table>
     )
 }
