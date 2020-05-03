@@ -65,7 +65,11 @@ class App extends React.Component {
             .then((data) => {
             let songs = [];
             for (const song of data.songs) {
-                songs.push(<li key={song['song_title']}><SongLink handleClick={this.handleClick} song_artist={song['song_artist']} song_title={song['song_title']} /></li>)
+                songs.push(<li key={song['song_title']}>
+                                <SongLink handleClick={this.handleClick} 
+                                song_artist={song['song_artist']} 
+                                song_title={song['song_title']} />
+                            </li>)
             };
             this.setState({
                             hits: songs,
@@ -76,12 +80,12 @@ class App extends React.Component {
             });
     }
 
-    async handleClick(evt) {
-        const song_artist = $(evt.target).data('song_artist');
-        const song_title = $(evt.target).data('song_title');
+    handleClick(evt) {
+        const song_artist = evt.target.getAttribute('data-song_artist');
+        const song_title = evt.target.getAttribute('data-song_title');
         this.setState({showLoadingGif: true});
 
-        await fetch(`/api/song-data?song_artist=${song_artist}&song_title=${song_title}`)
+        fetch(`/api/song-data?song_artist=${song_artist}&song_title=${song_title}`)
         .then(res => res.json())
         .then((data) => {
             if (data.song_annos.length) {
@@ -162,7 +166,9 @@ class App extends React.Component {
                     <div className="row">
                         <div className="col">
                             <Search onSubmit={this.handleSubmit}/>
-                            <LoadingGif styling={(this.state.showLoadingGif ? {visibility: 'visible'} : {visibility: 'hidden'})} />
+                            <LoadingGif styling={(this.state.showLoadingGif ? 
+                                                {visibility: 'visible'} : 
+                                                {visibility: 'hidden'})} />
                         </div>
                     </div>
                     {this.state.searchHits && <Redirect to="/search" />}
