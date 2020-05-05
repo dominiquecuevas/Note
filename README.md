@@ -3,7 +3,7 @@
 Full stack web app enables users to search song lyrics to highlight and annotate sections for their meaning.
 
 ## Video Demo
-▷ https://drive.google.com/file/d/1g65_T7Xm__HvwRbHdp7ZNU2XHxmFd5X4/view
+▷ https://drive.google.com/file/d/1gmugbYmrAkNb3R2hAiJjYQNO6FHjHab9/view?usp=sharing
 
 ## Getting Started
 ### Prerequisites
